@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: firstmeet-wapp-navigator
+  cloud:
+    config:
+      uri: http://configserver:8080
+      label: master

@@ -1,0 +1,123 @@
+server:
+  port: 8080
+  servlet:
+    application-display-name: firstmeet-wapp-navigator
+    contextPath: /
+    session:
+      timeout: 3600s
+      tracking-modes: cookie, url
+      cookie:
+        http-only: true
+  tomcat:
+    basedir: "./"
+    max-threads: 500
+    min-spare-threads: 50
+    accept-count: 200
+    max-connections:  10000
+    accesslog:
+      enabled: true
+      directory: ${FIRSTMEET_MSERVICE_DATA_BASEDIR:.}/logs/${HOSTNAME:1}/access-log
+    manager.enable: false
+    manager.context-path: '/data/webapps/manager'
+
+#actuator配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    platform: mysql
+    url: jdbc:mysql://192.168.1.220:3306/ad_manager?useSSL=false&useUnicode=true&characterEncoding=utf-8&autoReconnect=true
+    username: kaifa
+    password: chujian8
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 2000  #配置获取连接等待超时的时间
+      time-between-eviction-runs-millis: 60000 #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      min-evictable-idle-time-millis: 300000 #配置一个连接在池中最小生存的时间，单位是毫秒
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      filters: stat,slf4j
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  jackson:
+    serialization:
+      indent_output: true
+
+  messages:
+    basename: i18n.messages
+    use-code-as-default-message: true
+
+spring.thymeleaf:
+  prefix: classpath:/templates/
+  suffix: .html
+  mode: HTML5
+  encoding: UTF-8
+  #热部署文件，页面不产生缓存，及时更新, 在开发阶段设置为false
+  cache: false
+
+spring.resources.chain.strategy.content.enabled: true
+spring.resources.chain.strategy.content.paths: /**
+
+ups.wapp.service.name: ""
+
+chujian.sso:
+  token:
+    #7 * 24 * 60 * 60
+    expire-seconds: 604800
+    key:
+      jks-filepath: 'chujian_sso.jks'
+      password: 'chujian_sso_pass'
+      alias: 'chujian_sso'
+      public-key-string: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAobCCvkmPVvMTvx0Gjqc5Y1uYzj3yGVfHKJKpJ/Jp3rPVFg/S3Zy4vLYS8dn6cAlJdrDS8IGvxfnunv7GcLRs2kJZbxIlprueAlOmHFhMge5yaIz9HYUtwctJBWtCbdPohxZwSRcCljZlymmCWOMiiPzlOaqOHaHC+ttfVg6HImOgyiq6hBrB2i0s6L09SXMusmuRlu1W/SkH9VcPeZwu5yfjxHQh2II+0NlRf9YBpaD6OhJkT9+5gqbPTROJFwbMsExZoNjsMc22dqTvgkqz3cyTlHaQVR3sm9osbDvehNvwg+nkw1/rNvx1HUvd+c6nX8FBUTj4Nh68Ow42LqRzXwIDAQAB'
+
+spring.redisson:
+  config:
+    name: classpath:redisson/redisson-local.yml
+
+spring.redis:
+  database: 0
+  host: 192.168.1.220
+  port: 6379
+  password: chujian8
+  lettuce.pool.max-active: 20
+  lettuce.pool.max-wait: -1
+  lettuce.pool.max-idle: 10
+  lettuce.pool.min-idle: 5
+
+spring.session:
+  timeout: 3600s
+  store-type: redis
+
+resource:
+  types:
+    - type: system
+      name: 系统
+    - type: menu
+      name: 菜单
+    - type: button
+      name: 按钮
+    - type: link
+      name: 链接
+
+sso:
+  admin: 'admin'

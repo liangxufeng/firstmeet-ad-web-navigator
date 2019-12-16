@@ -1,0 +1,69 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion '8.13'
+}
+def profile = System.getProperty("profile") ?: "dev"
+apply from: "build-${profile}.gradle"
+
+group 'com.chujian.ups'
+description = """firstmeet wapp navigator"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+//为application plugin脚本方式打包
+mainClassName = 'com.chujian.wapp.navigator.WAppNavigatorApplication'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Checkstyle) {
+    configFile file("config/checkstyle/checkstyle.xml")
+    ignoreFailures false
+    showViolations true
+    reports {
+        xml.enabled false
+        html.enabled true
+        html.stylesheet resources.text.fromFile('config/checkstyle/checkstyle-noframes.xsl')
+    }
+}
+
+jar {
+    archiveName = project.name + "-" + project.version + ".jar"
+}
+
+task createConfig {
+    def configDir = file("build/config")
+    outputs.dir configDir
+    doLast {
+        configDir.mkdirs()
+    }
+}
+
+task copyConfig(type: Copy) {
+    from('src/main/resources') {
+        include '*.yml'
+        include '*.properties'
+    }
+    into 'build/config'
+    dependsOn createConfig
+}
+
+distributions {
+    main {
+        baseName = "app"
+        version = ""
+        contents {
+            eachFile {
+                rename(project.name, "startup")
+            }
+            from(copyConfig) {
+                into "config"
+            }
+        }
+    }
+}

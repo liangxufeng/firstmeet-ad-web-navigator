@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>角色管理</title>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport">
+  <link href="../../static/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+        th:href="@{{serviceName}/bootstrap/css/bootstrap.min.css(serviceName=${application.serviceName})}">
+  <link href="../../static/css/bootstrap-table.min.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/bootstrap-table.min.css(serviceName=${application.serviceName})}">
+  <link href="../../static/css/style.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/style.css(serviceName=${application.serviceName})}">
+  <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css"
+        rel="stylesheet">
+</head>
+
+<body>
+<div class="alert alert-success" style="
+    padding: 17px;
+    margin-bottom: 15px;
+    border: 0px solid transparent;
+    ">分配 [[${role.roleName}]] 角色游戏权限
+</div>
+<!--<div class="alert alert-info" style="    color: #141514;
+    background-color: #d9edf7;
+    margin-top: -10px;
+    width: auto;
+    border-radius: 4px;" th:text="'当前角色:  '+${role.roleName}">当前角色
+</div>-->
+<!--th:text="'Welcome to our application, ' + ${user.name} + '!'"-->
+<div class="form-inline" game="form">
+  <button class="btn btn-success" id="change-sure-btn">确认修改</button>
+  <button class="btn btn-primary" onclick="history.back(-1);" type="button">返回</button>
+</div>
+
+<div class="panel-body">
+  <a class="display-hide" href="/roleGames"
+     id="getRoleGamesUrl"
+     th:href="@{{serviceName}/roleGames(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/change_roleGame"
+     id="changeRoleGameUrl"
+     th:href="@{{serviceName}/change_roleGame(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/searchByGameName"
+     id="searchByGameNameUrl"
+     th:href="@{{serviceName}/searchByGameName(serviceName=${application.serviceName})}"></a>
+  <table class="table table-bordered table-hover" id="gameTable">
+    <thead>
+    <tr>
+      <th th:width="39px"></th>
+      <th>游戏名称</th>
+      <th hidden>游戏ID</th>
+      <th hidden>角色ID</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="game : ${gameList}">
+      <!--当角色对应的game集合包含当前角色的id时 回显选中-->
+      <td><input name="roleGame" style="width: 15px; height: 15px;"
+                 th:attr="checked=${roleGameStr.contains(game.gameId)?true:false}"
+                 th:type="checkbox">
+      </td>
+      <td th:text="${game.gameName}"></td>
+      <td hidden th:name="gameId" th:text="${game.gameId}"></td>
+      <td hidden id="roleId" th:name="roleId" th:text="${role.roleId}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<script src="../../static/js/jquery.min.js"
+        th:src="@{{serviceName}/js/jquery.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/bootstrap/js/bootstrap.min.js"
+        th:src="@{{serviceName}/bootstrap/js/bootstrap.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/bootstrap-table.min.js"
+        th:src="@{{serviceName}/js/bootstrap-table.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/bootstrap-table-zh-CN.min.js"
+        th:src="@{{serviceName}/js/bootstrap-table-zh-CN.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/common.js"
+        th:src="@{{serviceName}/js/common.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/role/role_game.js"
+        th:src="@{{serviceName}/js/role/role_game.js(serviceName=${application.serviceName})}"></script>
+<script
+    src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+</body>
+</html>

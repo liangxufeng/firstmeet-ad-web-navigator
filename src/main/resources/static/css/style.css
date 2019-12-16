@@ -1,0 +1,74 @@
+html, body {
+  font-size: 16px;
+  font-family: Microsoft YaHei
+}
+
+.fl, .fr {
+  float: left;
+  margin-right: 40px;
+}
+
+.admin-mask {
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  background: rgba(0, 0, 0, 0);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 99;
+}
+
+.web-box {
+  width: 560px;
+  height: auto;
+  border: 1px solid #aaa;
+  padding: 20px;
+  border-radius: 10px;
+  background: #fff;
+  position: absolute;
+  left: 20%;
+  top: 5%;
+  z-index: 99;
+}
+
+.websetContClose {
+  font-size: 20px;
+  float: right;
+  cursor: pointer;
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+  background-color: #fff;
+  opacity: 1;
+}
+
+.alert-success {
+  font-size: 20px;
+}
+
+#admin-title {
+  margin-top: 0px;
+  color: #3c763d;
+}
+
+.btn-bottom-bar {
+  float: right;
+}
+
+.btn-sure-add {
+  float: right;
+}
+
+.panel-body {
+  text-align: left;
+  overflow: hidden;
+  margin-left: -15px;
+}
+
+.colStyle {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+

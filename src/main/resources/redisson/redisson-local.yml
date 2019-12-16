@@ -1,0 +1,24 @@
+singleServerConfig:
+  clientName: "firstmeet-wapp-navigator"
+  address: "redis://192.168.1.220:6379"
+  password: "chujian8"
+  database: 0
+  idleConnectionTimeout: 10000
+  pingTimeout: 1000
+  connectTimeout: 10000
+  timeout: 3000
+  retryAttempts: 3
+  retryInterval: 1500
+  reconnectionTimeout: 3000
+  failedAttempts: 3
+  subscriptionsPerConnection: 5
+  subscriptionConnectionMinimumIdleSize: 1
+  subscriptionConnectionPoolSize: 50
+  connectionMinimumIdleSize: 32
+  connectionPoolSize: 64
+  dnsMonitoringInterval: 5000
+threads: 0
+nettyThreads: 0
+transportMode: "NIO"
+codec:
+  class: org.redisson.codec.FstCodec

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>用户管理</title>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport">
+  <link href="../../static/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+        th:href="@{{serviceName}/bootstrap/css/bootstrap.min.css(serviceName=${application.serviceName})}">
+  <link href="../../static/css/bootstrap-table.min.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/bootstrap-table.min.css(serviceName=${application.serviceName})}">
+  <link href="../../static/css/style.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/style.css(serviceName=${application.serviceName})}">
+  <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css"
+        rel="stylesheet">
+  <!---->
+  <link href="../../static/css/zTreeStyle/zTreeStyle.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/zTreeStyle/zTreeStyle.css(serviceName=${application.serviceName})}">
+  <link href="../../static/css/demo.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/demo.css(serviceName=${application.serviceName})}"
+        type="text/css">
+  <style type="text/css">
+    .ztree li span.button.add {
+      margin-left: 2px;
+      margin-right: -1px;
+      background-position: -144px 0;
+      vertical-align: top;
+      *vertical-align: middle
+    }
+  </style>
+</head>
+
+<body>
+<div class="alert alert-success">用户管理</div>
+<form hidden>
+  <input class="form-control" id="tokenUserId" th:value="${userId}" type="text">
+</form>
+<div class="form-inline" role="form">
+
+  <button class="btn btn-success"
+          id="userRole-btn"
+          th:if="${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_USER_ROLE)}">
+    分配角色
+  </button>
+  <button class="btn btn-success"
+          id="add-btn"
+          th:if="${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_USER_ADD)}">
+    添加用户
+  </button>
+  <button class="btn btn-success"
+          id="edit-btn"
+          th:if="${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_USER_EDIT)}">
+    编辑用户
+  </button>
+  <button class="btn btn-success"
+          id="del-btn"
+          th:if="${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_USER_DEL)}">
+    删除用户
+  </button>
+
+  <input class="form-control" id="searchUserName" placeholder="用户名称搜索" style="margin-left: 20px;"
+         type="text">
+  <input class="btn btn-primary" id="search" type="button" value="搜索">
+  <input class="btn btn-primary" id="reset" type="button" value="重置">
+</div>
+
+<div class="panel-body">
+  <a class="display-hide" href="/user"
+     id="getUserUrl"
+     th:href="@{{serviceName}/user(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/save_user"
+     id="saveUserUrl"
+     th:href="@{{serviceName}/save_user(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/delete_user"
+     id="deleteUserUrl"
+     th:href="@{{serviceName}/delete_user(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/edit_user"
+     id="editUserUrl"
+     th:href="@{{serviceName}/edit_user(serviceName=${application.serviceName})}"></a>
+  <!---->
+  <a class="display-hide"
+     href="/user_dept"
+     id="getUserDeptUrl"
+     th:href="@{{serviceName}/user_dept(serviceName=${application.serviceName})}"></a>
+
+  <table class="table table-striped" id="userTable"></table>
+  <div class="admin-mask" style="display: none;">
+    <!-- 添加 -->
+    <div class="web-box" style="display: none;">
+      <span class="glyphicon glyphicon-remove websetContClose"></span>
+      <h4 id="admin-title">添加用户</h4>
+      <hr/>
+      <form id="userForm">
+        <input id="userDeptId" type="hidden">
+        <input id="id" type="hidden">
+        <div class=" form-group">
+          <label for="userId">用户账号</label>
+          <input class="form-control" id="userId" name="userId" type="text">
+        </div>
+        <div class="form-group">
+          <label for="userName">用户名称</label>
+          <input class="form-control" id="userName" name="userName" type="text">
+        </div>
+        <div class="form-group">
+          <label>用户部门</label>
+          <div class="content_wrap" style="height: 32px">
+            <ul class="list">
+              <input id="citySel" readonly style="
+  width: 80%;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;" type="text" value=""/>
+              <a class="btn btn-default" href="#" id="menuBtn"
+                 onclick="showMenu(); return false;">选择部门</a>
+            </ul>
+          </div>
+        </div>
+        <div class="menuContent" id="menuContent"
+             style="display:none; position: absolute;z-index: 999;">
+          <ul class="ztree" id="treeDemo"
+              style="margin-top:0; width: 394px;background-color: #F9F9F9; border: 1px solid #617775"></ul>
+        </div>
+
+        <div class="form-group">
+          <label for="userSecret">用户密码</label>
+          <input class="form-control" id="userSecret" name="userSecret" type="password">
+        </div>
+
+        <div class="form-group">
+          <label for="userSecret">确认用户密码</label>
+          <input class="form-control" id="confirmUserSecret" name="confirmUserSecret"
+                 type="password">
+        </div>
+        <hr/>
+        <div class=" form-group btn-bottom-bar">
+          <button class="btn btn-primary" id="btn-sure-add" name="submit"
+                  th:if="${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_USER_EDIT)}">
+            确定
+          </button>
+          <button class="btn btn-primary" id="btn-sure-close" type="button">取消</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="../../static/js/jquery.min.js"
+        th:src="@{{serviceName}/js/jquery.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/bootstrap/js/bootstrap.min.js"
+        th:src="@{{serviceName}/bootstrap/js/bootstrap.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/bootstrap-table.min.js"
+        th:src="@{{serviceName}/js/bootstrap-table.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/bootstrap-table-zh-CN.min.js"
+        th:src="@{{serviceName}/js/bootstrap-table-zh-CN.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/common.js"
+        th:src="@{{serviceName}/js/common.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/user/user_query.js"
+        th:src="@{{serviceName}/js/user/user_query.js(serviceName=${application.serviceName})}"></script>
+<!--ztree插件-->
+<script src="../../static/js/jquery.ztree.all.min.js"
+        th:src="@{{serviceName}/js/jquery.ztree.all.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/jquery.ztree.core.min.js"
+        th:src="@{{serviceName}/js/jquery.ztree.core.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/jquery.ztree.excheck.min.js"
+        th:src="@{{serviceName}/js/jquery.ztree.excheck.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/jquery.ztree.exedit.js"
+        th:src="@{{serviceName}/js/jquery.ztree.exedit.js(serviceName=${application.serviceName})}"></script>
+<!---->
+
+<script
+    src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+</body>
+</html>

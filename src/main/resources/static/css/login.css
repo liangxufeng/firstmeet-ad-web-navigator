@@ -1,0 +1,151 @@
+/*main.css*/
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.dex-container {
+  color: #333;
+  margin: 7rem auto 45px;
+  max-width: 450px;
+  min-width: 320px;
+  text-align: center;
+}
+
+.dex-btn {
+  border-radius: 4px;
+  border: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.25), 0 0 1px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+}
+
+.dex-btn:focus {
+  outline: none;
+}
+
+.dex-btn:active {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  outline: none;
+}
+
+/*style.css*/
+
+.theme-body {
+  background-color: #364150;
+  color: #333;
+  font-family: 'Source Sans Pro', Helvetica, sans-serif;
+}
+
+.theme-heading {
+  font-size: 2.6rem;
+  font-weight: normal;
+  color: #fff;
+  letter-spacing: 5px;
+  text-align: center;
+  margin: 7rem auto 5rem;
+}
+
+@media (max-width: 475px) {
+  .theme-heading {
+    font-size: 1.9rem;
+    font-weight: normal;
+    color: #fff;
+    letter-spacing: 0;
+    text-align: center;
+    margin: 3rem auto 5rem;
+  }
+}
+
+.login_face {
+  margin: -85px auto 27px;
+  width: 100px;
+  height: 100px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  border: 5px solid #fff9;
+  overflow: hidden;
+  box-shadow: 0 0 30px #649490;
+}
+
+.login_face img {
+  width: 100%;
+}
+
+.theme-panel {
+  background-color: #fff;
+  border-radius: 8%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  padding: 30px;
+}
+
+.theme-btn--primary {
+  background-color: #333;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  min-width: 200px;
+  padding: 6px 12px;
+  margin-top: 20px;
+}
+
+.theme-btn--primary:hover {
+  background-color: #666;
+  color: #fff;
+}
+
+.theme-form-row {
+  display: block;
+  margin: 5px auto;
+}
+
+.theme-form-input {
+  border-radius: 4px;
+  border: 1px solid #CCC;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  color: #666;
+  display: block;
+  font-size: 14px;
+  height: 36px;
+  line-height: 1.42857143;
+  margin: auto;
+  padding: 6px 12px;
+  width: 250px;
+}
+
+.theme-form-input:focus,
+.theme-form-input:active {
+  border-color: #66AFE9;
+  outline: none;
+}
+
+.theme-form-label {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 4px auto;
+  position: relative;
+  text-align: left;
+  width: 250px;
+}
+
+.wrong-message {
+  font-size: 16px;
+  font-weight: bold;
+  background: #fff;
+  font-family: '微软雅黑';
+  position: relative;
+  color: #e42222;
+  outline: none;
+  width: 250px;
+  border-radius: 20px;
+  height: 25px;
+  text-align: left;
+  margin: 4px auto 0;
+}
+
