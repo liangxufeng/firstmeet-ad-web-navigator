@@ -13,8 +13,8 @@ public class GameRequestService {
   @Autowired
   private GameRepository gameRepository;
 
-  public void putGameToRequest(HttpServletRequest request, String gameId) {
-    Game game = gameRepository.findByGameId(gameId);
+  public void putGameToRequest(HttpServletRequest request, Integer gameId) {
+    Game game = gameRepository.findById(gameId);
     request.setAttribute("game", game);
   }
 

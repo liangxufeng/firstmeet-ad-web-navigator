@@ -2,12 +2,14 @@ package com.chujian.wapp.navigator.role.service;
 
 
 import com.chujian.wapp.navigator.game.entity.Game;
+import com.chujian.wapp.navigator.game.model.GameDTO;
 import com.chujian.wapp.navigator.game.respository.GameRepository;
 import com.chujian.wapp.navigator.role.entity.AdBaseProduct;
 import com.chujian.wapp.navigator.role.entity.AdBaseTeam;
 import com.chujian.wapp.navigator.role.entity.Media;
 import com.chujian.wapp.navigator.role.entity.MediaResource;
 import com.chujian.wapp.navigator.role.entity.Role;
+import com.chujian.wapp.navigator.role.entity.RoleGame;
 import com.chujian.wapp.navigator.role.entity.RoleMedia;
 import com.chujian.wapp.navigator.role.entity.RoleMediaResource;
 import com.chujian.wapp.navigator.role.entity.RoleProduct;
@@ -19,6 +21,7 @@ import com.chujian.wapp.navigator.role.model.MediaResourceDTO;
 import com.chujian.wapp.navigator.role.respository.AdProductRepository;
 import com.chujian.wapp.navigator.role.respository.MediaRepository;
 import com.chujian.wapp.navigator.role.respository.MediaResourceRepository;
+import com.chujian.wapp.navigator.role.respository.RoleGameRepository;
 import com.chujian.wapp.navigator.role.respository.RoleMediaRepository;
 import com.chujian.wapp.navigator.role.respository.RoleMediaResourceRepository;
 import com.chujian.wapp.navigator.role.respository.RoleProductRepository;
@@ -26,7 +29,6 @@ import com.chujian.wapp.navigator.role.respository.RoleRepository;
 import com.chujian.wapp.navigator.role.respository.RoleTeamRepository;
 import com.chujian.wapp.navigator.role.respository.TeamRepository;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,8 @@ public class RoleRequestService {
   private RoleRepository roleRepository;
   @Autowired
   private GameRepository gameRepository;
+  @Autowired
+  private RoleGameRepository roleGameRepository;
 
   @Autowired
   private MediaRepository mediaRepository;
@@ -64,14 +68,32 @@ public class RoleRequestService {
     request.setAttribute("role", role);
 
     //查询当前角色所拥有的游戏,做数据回显
-    List<Game> roleGameList = gameRepository.findGamesByRoleId(roleId);
-    String roleGameStr = roleGameList.toString();
-    request.setAttribute("roleGameStr", roleGameStr);
+//    List<Game> roleGameList = gameRepository.findGamesByRoleId(roleId);
+    List<RoleGame> roleGameList = roleGameRepository.findByRoleId(roleId);
+    List<String> roleGameDtoList = new ArrayList<>();
+    if (roleGameList == null || roleGameList.isEmpty()){
+      request.setAttribute("roleGameStr", roleGameDtoList.toString());
+    }else {
+      for (RoleGame roleGame : roleGameList) {
+        roleGameDtoList.add(roleGame.getGameId());
+      }
+      String roleGameStr = roleGameDtoList.toString();
+      request.setAttribute("roleGameStr", roleGameStr);
+    }
 
     //查询所有游戏信息
-    List<Game> gameList = gameRepository.findAll();
-    Collections.sort(gameList);
-    request.setAttribute("gameList", gameList);
+    List<Game> gameList = gameRepository.findByIsDel(1);
+    if (gameList == null || gameList.isEmpty()){
+
+      request.setAttribute("gameList", gameList);
+      return;
+    }
+    List<GameDTO> gameDtoList = new ArrayList<>();
+    for (Game game : gameList) {
+      gameDtoList.add(GameDTO.builder().gameId(game.getId().toString()).gameName(game.getName()).build());
+    }
+    request.setAttribute("gameList", gameDtoList);
+
   }
 
 

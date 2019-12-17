@@ -2,11 +2,9 @@ package com.chujian.wapp.navigator.game.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.chujian.wapp.navigator.game.entity.Game;
-import com.chujian.wapp.navigator.game.model.GameDTO;
 import com.chujian.wapp.navigator.game.respository.GameRepository;
 import com.chujian.wapp.navigator.role.respository.RoleGameRepository;
 import com.chujian.wapp.navigator.utils.DateUtils;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -38,24 +36,25 @@ public class GameService {
   public JSONObject findGameList(int page, int pageSize, String gameName) {
     JSONObject resultObj = new JSONObject();
 
-    Pageable pageable = PageRequest.of(page, pageSize, Direction.DESC, "createdAt");
+    Pageable pageable = PageRequest.of(page, pageSize, Direction.DESC, "utime");
     Page<Game> pageResult = null;
     if (StringUtils.isBlank(gameName)) {
       pageResult = gameRepository.findAll(pageable);
     } else {
-      pageResult = gameRepository.findByGameNameLike("%" + gameName + "%", pageable);
+      pageResult = gameRepository.findByNameLike("%" + gameName + "%", pageable);
     }
     long totalElements = pageResult.getTotalElements();
     int totalPages = pageResult.getTotalPages();
     int number = pageResult.getNumber();
-    List<GameDTO> gameList = new ArrayList<>();
+    List<Game> gameList = pageResult.getContent();
+   /* List<GameDTO> gameList = new ArrayList<>();
     for (Game game : pageResult) {
-      String newCreatedAt = convertDate(game.getCreatedAt().toString());
-      String newUpdatedAt = convertDate(game.getUpdatedAt().toString());
+      String newCreatedAt = convertDate(game.getCtime().toString());
+      String newUpdatedAt = convertDate(game.getUtime().toString());
       gameList.add(
-          GameDTO.builder().id(game.getId()).gameId(game.getGameId()).gameName(game.getGameName())
+          GameDTO.builder().id(game.getId()).gameId(game.getId().toString()).gameName(game.getName())
               .createdAt(newCreatedAt).updatedAt(newUpdatedAt).build());
-    }
+    }*/
     resultObj.put("total_pages", totalPages);
     resultObj.put("current_page", number);
     resultObj.put("page_size", pageSize);
@@ -71,7 +70,7 @@ public class GameService {
    * @param gameName
    */
   public void save(String gameId, String gameName) throws Exception {
-    Game game = Game.builder().gameId(gameId).gameName(gameName).build();
+    Game game = Game.builder().id(Integer.valueOf(gameId)).name(gameName).build();
     gameRepository.save(game);
   }
 
@@ -82,7 +81,7 @@ public class GameService {
    * @return
    */
   public Game findByGameId(String gameId) {
-    return gameRepository.findByGameId(gameId);
+    return gameRepository.findById(Integer.parseInt(gameId));
   }
 
 
@@ -94,9 +93,9 @@ public class GameService {
    * @throws Exception
    */
   public void updata(String gameId, String gameName) throws Exception {
-    Game game = gameRepository.findByGameId(gameId);
-    game.setGameName(gameName);
-    game.setCreatedAt(game.getCreatedAt());
+    Game game = gameRepository.findById(Integer.parseInt(gameId));
+    game.setName(gameName);
+    game.setCreator(game.getCreator());
     gameRepository.saveAndFlush(game);
   }
 
@@ -107,7 +106,7 @@ public class GameService {
    * @return
    */
   public Game findGameByGameId(String gameId) {
-    return gameRepository.findByGameId(gameId);
+    return gameRepository.findById(Integer.parseInt(gameId));
   }
 
   /**
@@ -122,7 +121,7 @@ public class GameService {
         roleGameRepository.deleteByGameId(gameIds[i]);
       }
       //删除游戏的信息
-      gameRepository.deleteByGameId(gameIds[i]);
+      gameRepository.deleteById(Integer.parseInt(gameIds[i]));
     }
   }
 

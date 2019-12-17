@@ -1,7 +1,6 @@
 package com.chujian.wapp.navigator.role.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.chujian.wapp.navigator.game.entity.Game;
 import com.chujian.wapp.navigator.game.respository.GameRepository;
 import com.chujian.wapp.navigator.resource.entity.Resource;
 import com.chujian.wapp.navigator.resource.model.ResourceDTO;
@@ -31,6 +30,7 @@ import com.chujian.wapp.navigator.role.respository.RoleTeamRepository;
 import com.chujian.wapp.navigator.user.respository.UserRoleRepository;
 import com.chujian.wapp.navigator.utils.DateUtils;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import javax.transaction.Transactional;
@@ -291,7 +291,7 @@ public class RoleService {
   }
 
   public void changeRoleGame(String[] gameIds, String roleId) {
-    List<Game> gamesByRoleId = gameRepository.findGamesByRoleId(roleId);
+    List<RoleGame> gamesByRoleId = roleGameRepository.findByRoleId(roleId);
     if (gamesByRoleId.size() != 0) {
       //先删除角色之前所拥有的游戏
       roleGameRepository.deleteByRoleId(roleId);
@@ -415,71 +415,139 @@ public class RoleService {
     List<RoleMediaResource> roleMediaResourceList = roleMediaResourceRepository
         .findByRoleId(roleId);
 
-    if (mediaList == null || mediaList.isEmpty()) {
+    if (mediaList == null || mediaList.isEmpty()) {//
       return list;
     }
-    for (Media media : mediaList) {
-      if (roleMediaList == null || roleMediaList.isEmpty()) {//角色所拥有的媒体为空
-        if (mediaResourceList == null || mediaResourceList.isEmpty()) {//资源为空
+    if (mediaResourceList == null || mediaResourceList.isEmpty()) {//资源为控(只返回包含媒体的树)
+      if (roleMediaList == null || roleMediaList.isEmpty()) {//2资源为控,角色媒体为空
+        for (Media media : mediaList) {
           list.add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
               .checked(false).build());
-        } else {//资源不为空
+        }
+      } else {//3资源为控,角色媒体不为空
+        for (Media media : mediaList) {
+          for (RoleMedia roleMedia : roleMediaList) {
+            if (roleMedia.getMediaId() == media.getId()) {
+              list.add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
+                  .checked(true).build());
+            } else {
+              list.add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
+                  .checked(false).build());
+            }
+          }
+        }
+      }
+    } else {//资源不为空
+      if (roleMediaList == null || roleMediaList.isEmpty()) {//4资源不为空,角色媒体为空,返回的是包含媒体和资源的空树
+        for (Media media : mediaList) {
           list.add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
               .checked(false).build());
-          //找出当前媒体下的资源
           for (MediaResource mediaResource : mediaResourceList) {
-            if (media.getId().equals(mediaResource.getMedia().getId())) {
+            if (mediaResource.getMedia().getId().equals(media.getId())) {
               list.add(MediaAndResourceDTO.builder().id(mediaResource.getId()).pid(media.getId())
                   .name(mediaResource.getResourceName()).checked(false).build());
             }
           }
         }
-      } else {//角色所拥有的媒体不为空
-        if (mediaResourceList == null || mediaResourceList.isEmpty()) {//资源为空
-          for (RoleMedia roleMedia : roleMediaList) {
-            if (media.getId() == roleMedia.getMediaId()) {
-              list.add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
-                  .checked(true).build());
-            } else {
-              list.add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
-                  .checked(false).build());
-            }
-          }
-        } else {//资源不为空
-          for (RoleMedia roleMedia : roleMediaList) {
-            if (media.getId() == roleMedia.getMediaId()) {
-              list.add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
-                  .checked(true).build());
-            } else {
-              list.add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
-                  .checked(false).build());
-            }
-          }
-          if (roleMediaResourceList == null || roleMediaResourceList.isEmpty()) {//角色拥有的资源为空
+      } else {//角色媒体不为空
+        if (roleMediaResourceList == null || roleMediaResourceList
+            .isEmpty()) {//5资源不为空,角色媒体不为空,角色资源为空
+          List<MediaAndResourceDTO> tempList = new ArrayList<>();
+          for (Media media : mediaList) {
+            tempList
+                .add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
+                    .checked(false).build());
             for (MediaResource mediaResource : mediaResourceList) {
-              if (media.getId().equals(mediaResource.getMedia().getId())) {
-                list.add(MediaAndResourceDTO.builder().id(mediaResource.getId()).pid(media.getId())
-                    .name(mediaResource.getResourceName()).checked(false).build());
-              }
-            }
-          } else {//角色拥有的资源不为空
-            for (MediaResource mediaResource : mediaResourceList) {
-              for (RoleMediaResource roleMediaResource : roleMediaResourceList) {
-                if (mediaResource.getId() == roleMediaResource.getMediaResourceId() && mediaResource.getMedia().getId().equals(media.getId())){
-                  list.add(MediaAndResourceDTO.builder().id(mediaResource.getId()).pid(mediaResource.getMedia().getId())
-                      .name(mediaResource.getResourceName()).checked(true).build());
-                }else if (mediaResource.getId() != roleMediaResource.getMediaResourceId() && mediaResource.getMedia().getId().equals(media.getId())){
-                  list.add(MediaAndResourceDTO.builder().id(mediaResource.getId()).pid(mediaResource.getMedia().getId())
-                      .name(mediaResource.getResourceName()).checked(false).build());
-                } else {
-                  continue;
-                }
+              if (mediaResource.getMedia().getId().equals(media.getId())) {
+                tempList
+                    .add(MediaAndResourceDTO.builder().id(mediaResource.getId()).pid(media.getId())
+                        .name(mediaResource.getResourceName()).checked(false).build());
               }
             }
           }
+
+          List<Media> tempMediaList = new ArrayList<>();
+          for (RoleMedia roleMedia : roleMediaList) {
+            for (Media media : mediaList) {
+              if (media.getId() == roleMedia.getMediaId()) {
+                tempMediaList.add(media);
+              }
+            }
+          }
+
+          List<MediaAndResourceDTO> tempList1 = new ArrayList<>();
+          for (MediaAndResourceDTO mediaAndResourceDTO : tempList) {
+            for (Media media : tempMediaList) {
+              if (media.getId() == mediaAndResourceDTO.getId()
+                  && mediaAndResourceDTO.getPid() == 0) {
+                mediaAndResourceDTO.setChecked(true);
+                tempList1.add(mediaAndResourceDTO);
+              }
+            }
+          }
+          tempList.removeAll(tempList1);
+          tempList.addAll(tempList1);
+
+          list = tempList;
+
+        } else {//6资源不为空,角色媒体不为空,角色资源不为空
+          List<MediaAndResourceDTO> tempList = new ArrayList<>();
+          for (Media media : mediaList) {
+            tempList
+                .add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
+                    .checked(false).build());
+            for (MediaResource mediaResource : mediaResourceList) {
+              if (mediaResource.getMedia().getId().equals(media.getId())) {
+                tempList
+                    .add(MediaAndResourceDTO.builder().id(mediaResource.getId()).pid(media.getId())
+                        .name(mediaResource.getResourceName()).checked(false).build());
+              }
+            }
+          }
+
+          List<Media> tempMediaList = new ArrayList<>();
+          for (RoleMedia roleMedia : roleMediaList) {
+            for (Media media : mediaList) {
+              if (media.getId() == roleMedia.getMediaId()) {
+                tempMediaList.add(media);
+              }
+            }
+          }
+
+          List<MediaResource> tempMediaResourceList = new ArrayList<>();
+          for (MediaResource mediaResource : mediaResourceList) {
+            for (RoleMediaResource roleMediaResource : roleMediaResourceList) {
+              if (roleMediaResource.getMediaResourceId() == mediaResource.getId()) {
+                tempMediaResourceList.add(mediaResource);
+              }
+            }
+          }
+
+          List<MediaAndResourceDTO> tempList1 = new ArrayList<>();
+          for (MediaAndResourceDTO mediaAndResourceDTO : tempList) {
+            for (Media media : tempMediaList) {
+              if (media.getId() == mediaAndResourceDTO.getId()
+                  && mediaAndResourceDTO.getPid() == 0) {
+                mediaAndResourceDTO.setChecked(true);
+                tempList1.add(mediaAndResourceDTO);
+              }
+            }
+            for (MediaResource mediaResource : tempMediaResourceList) {
+              if (mediaResource.getMedia().getId() == mediaAndResourceDTO.getPid()
+                  && mediaResource.getId() == mediaAndResourceDTO.getId()) {
+                mediaAndResourceDTO.setChecked(true);
+                tempList1.add(mediaAndResourceDTO);
+              }
+            }
+          }
+          tempList.removeAll(tempList1);
+          tempList.addAll(tempList1);
+
+          list = tempList;
         }
       }
     }
+    list.sort(Comparator.comparingInt(MediaAndResourceDTO::getId));
     return list;
   }
 }

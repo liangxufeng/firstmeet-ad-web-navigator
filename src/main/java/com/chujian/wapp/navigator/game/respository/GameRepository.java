@@ -14,14 +14,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
 
-  Game findByGameId(String gameId);
+  Game findById(Integer gameId);
 
   @Transactional
   @Modifying
-  void deleteByGameId(String gameId);
+  void deleteById(Integer gameId);
 
   @Query(value = "SELECT r.* from sys_game r , sys_role_game u where r.game_id=u.game_id and u.role_id = :roleId ", nativeQuery = true)
   List<Game> findGamesByRoleId(@Param("roleId") String roleId);
 
-  Page<Game> findByGameNameLike(String s, Pageable pageable);
+  Page<Game> findByNameLike(String s, Pageable pageable);
+
+  List<Game> findByIsDel(int i);
+
 }

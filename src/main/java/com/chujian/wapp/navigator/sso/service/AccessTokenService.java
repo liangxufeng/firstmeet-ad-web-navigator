@@ -135,12 +135,12 @@ public class AccessTokenService {
 
       List<RoleGame> roleGameList = roleGameRepository.findByRoleId(userRole.getRoleId());
       for (RoleGame roleGame : roleGameList) {
-        Game game = gameRepository.findByGameId(roleGame.getGameId());
+        Game game = gameRepository.findById(Integer.valueOf(roleGame.getGameId()));
         if (game == null) {
           continue;
         }
-        AccessGame accessGame = AccessGame.builder().id(game.getGameId())
-            .name(game.getGameName()).build();
+        AccessGame accessGame = AccessGame.builder().id(game.getId().toString())
+            .name(game.getName()).build();
         gameList.add(accessGame);
       }
     }
@@ -349,8 +349,8 @@ public class AccessTokenService {
 
     List<Game> allGameList = gameRepository.findAll();
     for (Game game : allGameList) {
-      AccessGame accessGame = AccessGame.builder().id(game.getGameId())
-          .name(game.getGameName()).build();
+      AccessGame accessGame = AccessGame.builder().id(game.getId().toString())
+          .name(game.getName()).build();
       gameList.add(accessGame);
     }
 

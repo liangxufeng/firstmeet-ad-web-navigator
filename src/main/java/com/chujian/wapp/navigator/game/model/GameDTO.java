@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class GameDTO implements Serializable {
 
-  private Long id;
+  private Integer id;
   private String gameId;
   private String gameName;
   private String createdAt;

@@ -121,7 +121,7 @@ function CheckMediaId(){
   var nodes = treeObj.getCheckedNodes(true);
   if (nodes.length > 0) {
     for (var i = 0; i < nodes.length; i++) {
-      if (nodes[i].isParent){
+      if (nodes[i].pid==0){
         mediaIdArray.push(nodes[i].id);
       }
     }
@@ -135,7 +135,7 @@ function CheckMediaResourceId(){
   var nodes = treeObj.getCheckedNodes(true);
   if (nodes.length > 0) {
     for (var i = 0; i < nodes.length; i++) {
-      if (!nodes[i].isParent){
+      if (nodes[i].pid!=0){
         mediaResourceIdArray.push(nodes[i].id);
       }
     }

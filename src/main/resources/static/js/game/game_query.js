@@ -75,16 +75,25 @@ var initTable = function (gameName) {
       checkbox: true,
       visible: true                  //是否显示复选框
     }, {
-      field: 'gameId',
+      field: 'id',
       title: '游戏ID'
     }, {
-      field: 'gameName',
+      field: 'name',
       title: '游戏名称'
+    },  {
+      field: 'code',
+      title: 'code'
     }, {
-      field: 'createdAt',
+      field: 'icon',
+      title: 'icon'
+    },  {
+      field: 'intro',
+      title: '介绍'
+    },  {
+      field: 'ctime',
       title: '创建时间'
     }, {
-      field: 'updatedAt',
+      field: 'utime',
       title: '修改时间'
     }],
     onLoadSuccess: function () {
