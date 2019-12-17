@@ -2,9 +2,11 @@ package com.chujian.wapp.navigator.game.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.chujian.wapp.navigator.game.entity.Game;
+import com.chujian.wapp.navigator.game.entity.GamePageDTO;
 import com.chujian.wapp.navigator.game.respository.GameRepository;
 import com.chujian.wapp.navigator.role.respository.RoleGameRepository;
 import com.chujian.wapp.navigator.utils.DateUtils;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +49,20 @@ public class GameService {
     int totalPages = pageResult.getTotalPages();
     int number = pageResult.getNumber();
     List<Game> gameList = pageResult.getContent();
+    if (gameList == null || gameList.isEmpty()) {
+      resultObj.put("game", gameList);
+    } else {
+      List<GamePageDTO> gameDtoList = new ArrayList<>();
+      for (Game game : gameList) {
+        String newCreatedAt = convertDate(game.getCtime().toString());
+        String newUpdatedAt = convertDate(game.getUtime().toString());
+        gameDtoList
+            .add(GamePageDTO.builder().id(game.getId()).name(game.getName()).code(game.getCode())
+                .icon(game.getIcon()).intro(game.getIntro()).isDel(game.getIsDel())
+                .ctime(newCreatedAt).utime(newUpdatedAt).build());
+      }
+      resultObj.put("game", gameDtoList);
+    }
    /* List<GameDTO> gameList = new ArrayList<>();
     for (Game game : pageResult) {
       String newCreatedAt = convertDate(game.getCtime().toString());
@@ -59,7 +75,7 @@ public class GameService {
     resultObj.put("current_page", number);
     resultObj.put("page_size", pageSize);
     resultObj.put("total_elements", totalElements);
-    resultObj.put("game", gameList);
+
     return resultObj;
   }
 

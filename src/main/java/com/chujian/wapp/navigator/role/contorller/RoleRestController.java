@@ -231,25 +231,4 @@ public class RoleRestController {
     return ResponseEntity.ok(jsonObject);
   }
 
-  /**
-   *
-   */
-  @GetMapping(value = "/getMediaResource", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-  public ResponseEntity getMediaResource(
-      HttpServletRequest request,
-      @RequestParam(value = "media_id", required = false) String mediaId,
-      @RequestParam("role_id") String roleId
-  ) {
-    JSONObject jsonObject = new JSONObject();
-    try {
-      jsonObject = new JSONObject();
-      roleService.getMediaResource(roleId,mediaId);
-      opLogService.saveOpLog(request, "role", "media_resource get", "role", SysOpLog.OP_RESULT_OK);
-      jsonObject.put("status", "ok");
-    } catch (Exception e) {
-      jsonObject.put("status", "fail");
-      log.error("Change roleData failed:" + e);
-    }
-    return ResponseEntity.ok(jsonObject);
-  }
 }

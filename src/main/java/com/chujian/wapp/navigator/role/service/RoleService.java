@@ -371,38 +371,6 @@ public class RoleService {
     }
   }
 
-  public void getMediaResource(String roleId, String mediaId) {
-    List<MediaResource> mediaResourceList = mediaResourceRepository.findByIsDel(1);
-    List<MediaResource> mediaResourceDtoList = new ArrayList<>();
-    if (mediaResourceList == null || mediaResourceList.isEmpty()) {
-      return;
-    }
-    for (MediaResource mediaResource : mediaResourceList) {
-      if (mediaResource.getMedia().getId().equals(Integer.valueOf(mediaId))) {
-        mediaResourceDtoList.add(mediaResource);
-      }
-    }
-
-    List<RoleMediaResource> roleMediaResourceList = roleMediaResourceRepository
-        .findByRoleId(roleId);
-    List<Integer> roleMediaResourceDtoList = new ArrayList<>();
-    if (roleMediaResourceList == null || roleMediaResourceList.isEmpty()) {
-      return;
-    }
-    if (mediaResourceDtoList.isEmpty()) {
-      return;
-    }
-    for (MediaResource mediaResource : mediaResourceDtoList) {
-      for (RoleMediaResource roleMediaResource : roleMediaResourceList) {
-        if (roleMediaResource.getMediaResourceId() == mediaResource.getId()) {
-          roleMediaResourceDtoList.add(mediaResource.getId());
-        }
-      }
-    }
-    //mediaResourceDtoList为当前媒体下的资源
-    //roleMediaResourceDtoList为当前媒体下用户所拥有的资源
-  }
-
   public List<MediaAndResourceDTO> showRoleDataTree(String roleId) {
     List<MediaAndResourceDTO> list = new ArrayList<>();
     //查出所有的媒体

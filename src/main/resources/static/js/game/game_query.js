@@ -89,6 +89,9 @@ var initTable = function (gameName) {
     },  {
       field: 'intro',
       title: '介绍'
+    },   {
+      field: 'isDel',
+      title: '是否启用'
     },  {
       field: 'ctime',
       title: '创建时间'
@@ -110,7 +113,7 @@ var initTable = function (gameName) {
     },
     onDblClickRow: function (row, $element) {
       var id = row.gameId;
-      editGame(id);
+      //editGame(id);
     }
   });
 };
