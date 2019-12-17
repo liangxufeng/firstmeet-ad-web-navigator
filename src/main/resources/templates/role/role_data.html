@@ -35,7 +35,7 @@
   <button class="btn btn-primary" id="reset" type="button">重置</button>
   <button class="btn btn-primary" id="change-sure-btn">确认修改</button>
   <button class="btn btn-primary" onclick="history.back(-1);" type="button">返回</button>
-  <ul id="roleId" th:name="roleId" th:text="${role.roleId}"></ul>
+  <ul hidden id="roleId" th:name="roleId" th:text="${role.roleId}"></ul>
 </div>
 
 
@@ -109,8 +109,16 @@
     </div>
 
     <div class="content_wrap" style="width:20%;float:left;margin-left: 5%;height: 650px;">
-      <div class="zTreeDemoBackground left">
-        <ul class="ztree" id="treeDemo" style="height: 650px"></ul>
+      <table class="table table-bordered table-hover" id="headTable2" >
+        <thead>
+        <tr>
+          <td style="width: 32px;" th:type="checkbox"></td>
+          <th style="font-weight: 600;">媒体及资源</th>
+        </tr>
+        </thead>
+      </table>
+      <div class="zTreeDemoBackground left" style="margin-top: -35px;margin-left: -10px;">
+        <ul class="ztree" id="treeDemo" style="height: 610px;width: 103%"></ul>
       </div>
     </div>
 

@@ -13,7 +13,6 @@ website:	http://code.google.com/p/jquerytree/
   margin: 0;
   font-size: 14px;
   font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
-  font-weight: 600;
 }
 
 .ztree {
@@ -42,10 +41,10 @@ website:	http://code.google.com/p/jquerytree/
 }
 
 .ztree li a {
-  padding: 1px 3px 0 0;
+  padding: 1px 3px 0 5px;
   margin: 0;
   cursor: pointer;
-  height: 20px;
+  height: 22px;
   color: #2b3643;
   background-color: transparent;
   text-decoration: none;

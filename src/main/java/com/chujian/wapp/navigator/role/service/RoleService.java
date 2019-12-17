@@ -403,64 +403,83 @@ public class RoleService {
     //roleMediaResourceDtoList为当前媒体下用户所拥有的资源
   }
 
-  public  List<MediaAndResourceDTO> showRoleDataTree(String roleId) {
+  public List<MediaAndResourceDTO> showRoleDataTree(String roleId) {
+    List<MediaAndResourceDTO> list = new ArrayList<>();
     //查出所有的媒体
     List<Media> mediaList = mediaRepository.findByIsDel(1);
+    //查出所有资源
+    List<MediaResource> mediaResourceList = mediaResourceRepository.findByIsDel(1);
+    //查出角色所拥有的媒体
+    List<RoleMedia> roleMediaList = roleMediaRepository.findByRoleId(roleId);
+    //查出所有的用户拥有的媒体资源
+    List<RoleMediaResource> roleMediaResourceList = roleMediaResourceRepository
+        .findByRoleId(roleId);
 
-    List<MediaAndResourceDTO> list = new ArrayList<>();
     if (mediaList == null || mediaList.isEmpty()) {
       return list;
     }
     for (Media media : mediaList) {
-      //查出角色所拥有的媒体
-      List<RoleMedia> roleMediaList = roleMediaRepository.findByRoleId(roleId);
-      if (roleMediaList == null || roleMediaList.isEmpty()) {
-        return list;
-      }
-      for (RoleMedia roleMedia : roleMediaList) {
-        if (roleMedia.getMediaId()==media.getId()){
-          list.add(
-              MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName()).checked(true).build());
-        }else {
-          list.add(
-              MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName()).checked(false).build());
+      if (roleMediaList == null || roleMediaList.isEmpty()) {//角色所拥有的媒体为空
+        if (mediaResourceList == null || mediaResourceList.isEmpty()) {//资源为空
+          list.add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
+              .checked(false).build());
+        } else {//资源不为空
+          list.add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
+              .checked(false).build());
+          //找出当前媒体下的资源
+          for (MediaResource mediaResource : mediaResourceList) {
+            if (media.getId().equals(mediaResource.getMedia().getId())) {
+              list.add(MediaAndResourceDTO.builder().id(mediaResource.getId()).pid(media.getId())
+                  .name(mediaResource.getResourceName()).checked(false).build());
+            }
+          }
         }
-      }
-      Integer mediaId = media.getId();
-      List<MediaResource> mediaResourceList = mediaResourceRepository.findByIsDel(1);
-      //mediaResourceDtoList为当前媒体下的资源
-      List<MediaResource> mediaResourceDtoList = new ArrayList<>();
-      if (mediaResourceList == null || mediaResourceList.isEmpty()) {
-        return list;
-      }
-      for (MediaResource mediaResource : mediaResourceList) {
-        if (mediaResource.getMedia().getId().equals(Integer.valueOf(mediaId))) {
-          mediaResourceDtoList.add(mediaResource);
-        }
-      }
-      if (mediaResourceDtoList.isEmpty()) {
-        continue;
-      }
-      //查出所有的媒体资源
-      List<RoleMediaResource> roleMediaResourceList = roleMediaResourceRepository
-          .findByRoleId(roleId);
-      if (roleMediaResourceList == null || roleMediaResourceList.isEmpty()) {
-        return list;
-      }
-
-      for (MediaResource mediaResource : mediaResourceDtoList) {
-        for (RoleMediaResource roleMediaResource : roleMediaResourceList) {
-          if (roleMediaResource.getMediaResourceId() == mediaResource.getId()) {
-            list.add(MediaAndResourceDTO.builder().id(mediaResource.getId()).pid(media.getId())
-                .name(mediaResource.getResourceName()).checked(true).build());
-          } else {
-            list.add(MediaAndResourceDTO.builder().id(mediaResource.getId()).pid(media.getId())
-                .name(mediaResource.getResourceName()).checked(false).build());
+      } else {//角色所拥有的媒体不为空
+        if (mediaResourceList == null || mediaResourceList.isEmpty()) {//资源为空
+          for (RoleMedia roleMedia : roleMediaList) {
+            if (media.getId() == roleMedia.getMediaId()) {
+              list.add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
+                  .checked(true).build());
+            } else {
+              list.add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
+                  .checked(false).build());
+            }
+          }
+        } else {//资源不为空
+          for (RoleMedia roleMedia : roleMediaList) {
+            if (media.getId() == roleMedia.getMediaId()) {
+              list.add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
+                  .checked(true).build());
+            } else {
+              list.add(MediaAndResourceDTO.builder().id(media.getId()).pid(0).name(media.getName())
+                  .checked(false).build());
+            }
+          }
+          if (roleMediaResourceList == null || roleMediaResourceList.isEmpty()) {//角色拥有的资源为空
+            for (MediaResource mediaResource : mediaResourceList) {
+              if (media.getId().equals(mediaResource.getMedia().getId())) {
+                list.add(MediaAndResourceDTO.builder().id(mediaResource.getId()).pid(media.getId())
+                    .name(mediaResource.getResourceName()).checked(false).build());
+              }
+            }
+          } else {//角色拥有的资源不为空
+            for (MediaResource mediaResource : mediaResourceList) {
+              for (RoleMediaResource roleMediaResource : roleMediaResourceList) {
+                if (mediaResource.getId() == roleMediaResource.getMediaResourceId() && mediaResource.getMedia().getId().equals(media.getId())){
+                  list.add(MediaAndResourceDTO.builder().id(mediaResource.getId()).pid(mediaResource.getMedia().getId())
+                      .name(mediaResource.getResourceName()).checked(true).build());
+                }else if (mediaResource.getId() != roleMediaResource.getMediaResourceId() && mediaResource.getMedia().getId().equals(media.getId())){
+                  list.add(MediaAndResourceDTO.builder().id(mediaResource.getId()).pid(mediaResource.getMedia().getId())
+                      .name(mediaResource.getResourceName()).checked(false).build());
+                } else {
+                  continue;
+                }
+              }
+            }
           }
         }
       }
     }
-
     return list;
   }
 }

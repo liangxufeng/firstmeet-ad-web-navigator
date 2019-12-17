@@ -14,6 +14,24 @@ $(document).ready(function () {
 
 })
 
+var setting = {
+  check: {
+    enable: true,
+    chkStyle: "checkbox",
+    chkboxType: {"Y": "ps", "N": "s"}
+  },
+  data: {
+    key: {
+      name: "name"
+    },
+    simpleData: {
+      enable: true,
+      idKey: "id",
+      pIdKey: "pid",
+      rootPId: "0"
+    }
+  }
+};
 
 var initTree = function () {
   var getDataWithRoleIdUrl = $('#getDataWithRoleIdUrl').attr('href');
@@ -29,13 +47,6 @@ var initTree = function () {
     contentType: 'application/x-www-form-urlencoded; charset=utf-8',
     success: function (data) {
       $.fn.zTree.init($("#treeDemo"), setting, data);
-      var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-      var nodes = treeObj.getNodes();
-      if (nodes.length > 0) {
-        for (var i = 0; i < nodes.length; i++) {
-          treeObj.expandNode(nodes[i], true, false, false);//默认展开第一级节点
-        }
-      }
     },
     error: function () {
       alert("加载失败");
@@ -104,7 +115,38 @@ function CheckProductId() {
   return productIdArray;
 }
 
-function CheckMediaId() {
+function CheckMediaId(){
+  var mediaIdArray = new Array()
+  var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+  var nodes = treeObj.getCheckedNodes(true);
+  if (nodes.length > 0) {
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].isParent){
+        mediaIdArray.push(nodes[i].id);
+      }
+    }
+  }
+  return mediaIdArray;
+}
+
+function CheckMediaResourceId(){
+  var mediaResourceIdArray = new Array();
+  var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+  var nodes = treeObj.getCheckedNodes(true);
+  if (nodes.length > 0) {
+    for (var i = 0; i < nodes.length; i++) {
+      if (!nodes[i].isParent){
+        mediaResourceIdArray.push(nodes[i].id);
+      }
+    }
+  }
+  return mediaResourceIdArray;
+}
+
+
+
+
+/*function CheckMediaId() {
   var mediaIdArray = new Array()
   var Tabobj = $("#mediaTable");
   var Check = $("table input[type=radio]:checked");//在table中找input下类型为radio属性为选中状态的数据
@@ -126,7 +168,7 @@ function CheckMediaResourceId() {
     mediaResourceIdArray.push(id);
   });
   return mediaResourceIdArray;
-}
+}*/
 
 /*
 $('input[type=radio][name=roleMedia]').change(function () {
