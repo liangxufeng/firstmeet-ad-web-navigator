@@ -38,4 +38,18 @@ public class AccessToken implements Serializable {
 
   @JsonProperty("dept")
   private AccessDept accessDept;
+
+  /*
+  @JsonProperty("teams")
+  private List<AccessTeam> teamList;
+
+  @JsonProperty("products")
+  private List<AccessProduct> productList;
+
+  @JsonProperty("medias")
+  private List<AccessMedia> mediaList;
+
+  @JsonProperty("mediaResources")
+  private List<AccessMediaResource> mediaResourceList;
+  */
 }

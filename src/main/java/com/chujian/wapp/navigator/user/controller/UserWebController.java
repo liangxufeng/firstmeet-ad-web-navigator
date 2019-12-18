@@ -1,9 +1,9 @@
 package com.chujian.wapp.navigator.user.controller;
 
-import com.chujian.wapp.navigator.sso.model.ACL;
 import com.chujian.wapp.navigator.common.acl.AclResource;
 import com.chujian.wapp.navigator.dept.entity.Dept;
 import com.chujian.wapp.navigator.dept.respository.DeptRepository;
+import com.chujian.wapp.navigator.sso.model.ACL;
 import com.chujian.wapp.navigator.user.service.UserRequestService;
 import com.chujian.wapp.navigator.user.service.UserService;
 import java.util.List;
