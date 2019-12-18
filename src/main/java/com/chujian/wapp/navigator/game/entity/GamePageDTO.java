@@ -22,7 +22,7 @@ public class GamePageDTO {
     private String icon;
     private String intro;
     @Column(name = "is_del")
-    private Integer isDel;
+    private String isDel;
     // 操作用户
     private String updator;
     @Column(name = "updator_id")

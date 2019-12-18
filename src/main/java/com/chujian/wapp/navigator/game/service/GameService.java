@@ -54,23 +54,24 @@ public class GameService {
     } else {
       List<GamePageDTO> gameDtoList = new ArrayList<>();
       for (Game game : gameList) {
+
         String newCreatedAt = convertDate(game.getCtime().toString());
         String newUpdatedAt = convertDate(game.getUtime().toString());
-        gameDtoList
-            .add(GamePageDTO.builder().id(game.getId()).name(game.getName()).code(game.getCode())
-                .icon(game.getIcon()).intro(game.getIntro()).isDel(game.getIsDel())
-                .ctime(newCreatedAt).utime(newUpdatedAt).build());
+        GamePageDTO gamePageDTO = null;
+        if (game.getIsDel()==1){
+           gamePageDTO = GamePageDTO.builder().id(game.getId()).name(game.getName()).code(game.getCode())
+              .icon(game.getIcon()).intro(game.getIntro()).isDel("启用")
+              .ctime(newCreatedAt).utime(newUpdatedAt).build();
+        }else {
+           gamePageDTO = GamePageDTO.builder().id(game.getId()).name(game.getName()).code(game.getCode())
+              .icon(game.getIcon()).intro(game.getIntro()).isDel("禁用")
+              .ctime(newCreatedAt).utime(newUpdatedAt).build();
+        }
+        gameDtoList.add(gamePageDTO);
       }
       resultObj.put("game", gameDtoList);
     }
-   /* List<GameDTO> gameList = new ArrayList<>();
-    for (Game game : pageResult) {
-      String newCreatedAt = convertDate(game.getCtime().toString());
-      String newUpdatedAt = convertDate(game.getUtime().toString());
-      gameList.add(
-          GameDTO.builder().id(game.getId()).gameId(game.getId().toString()).gameName(game.getName())
-              .createdAt(newCreatedAt).updatedAt(newUpdatedAt).build());
-    }*/
+
     resultObj.put("total_pages", totalPages);
     resultObj.put("current_page", number);
     resultObj.put("page_size", pageSize);
