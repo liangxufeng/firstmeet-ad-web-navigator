@@ -2,10 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8"/>
-  <title>初见后台管理系统</title>
+  <title>初见AD后台管理系统</title>
   <meta content="IE=edge" http-equiv="X-UA-Compatible">
   <meta content="width=device-width, initial-scale=1" name="viewport"/>
-  <meta content="初见后台管理系统" name="description"/>
+  <meta content="初见AD后台管理系统" name="description"/>
   <meta content="chujian" name="author"/>
   <link href="../static/css/font-awesome/css/font-awesome.min.css" rel="stylesheet"
         th:href="@{{serviceName}/css/font-awesome/css/font-awesome.min.css(serviceName=${application.serviceName})}"/>
@@ -63,10 +63,10 @@
               <a href="#"
                  th:href="@{{serviceName}/password_change(serviceName=${application.serviceName})}">修改密码</a>
             </li>
-            <li>
+           <!-- <li>
               <a href="#" target="_self"
                  th:href="@{{serviceName}/logout(serviceName=${application.serviceName})}">退出</a>
-            </li>
+            </li>-->
           </ul>
         </li>
       </ul>

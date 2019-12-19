@@ -28,16 +28,6 @@ CREATE TABLE `sys_dept` (
   UNIQUE KEY `uni_dept_id` (`dept_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='部门表';
 
-CREATE TABLE `sys_game` (
-  `id` bigint(100) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `game_id` varchar(100) NOT NULL COMMENT '游戏id',
-  `game_name` varchar(50) NOT NULL COMMENT '游戏名称',
-  `created_at` timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
-  `updated_at` timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '修改时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uni_game_id` (`game_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='游戏管理表';
-
 CREATE TABLE `sys_role` (
   `id` bigint(100) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `role_id` varchar(100) NOT NULL COMMENT '角色id',
@@ -53,7 +43,7 @@ CREATE TABLE `sys_role_game` (
   `id` bigint(100) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `role_id` varchar(50) NOT NULL COMMENT '角色id',
   `game_id` varchar(100) NOT NULL COMMENT '游戏id',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_role_id` (`role_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色游戏中间表';
 
@@ -105,3 +95,43 @@ CREATE TABLE `sys_resource` (
   PRIMARY KEY (`id`),
    KEY `idx_resource_id` (`resource_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='资源表';
+
+CREATE TABLE `sys_role_media` (
+  `id` bigint(100) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `role_id` varchar(50) NOT NULL COMMENT '角色id',
+  `media_id` int(16) NOT NULL COMMENT '媒体id',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_role_id` (`role_id`) USING BTREE
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='角色媒体中间表';
+
+CREATE TABLE `sys_role_mediaresource` (
+  `id` bigint(100) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `role_id` varchar(50) NOT NULL COMMENT '角色id',
+  `mediaresource_id` int(16) NOT NULL COMMENT '媒体资源id',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_role_id` (`role_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色媒体资源中间表';
+
+CREATE TABLE `sys_role_product` (
+  `id` bigint(100) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `role_id` varchar(50) NOT NULL COMMENT '角色id',
+  `product_id` bigint(20) NOT NULL COMMENT '产品id',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_role_id` (`role_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色产品中间表';
+
+CREATE TABLE `sys_role_team` (
+  `id` bigint(100) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `role_id` varchar(50) NOT NULL COMMENT '角色id',
+  `team_id` bigint(50) NOT NULL COMMENT '团队id',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_role_id` (`role_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色团队中间表';
+
+CREATE TABLE `sys_user_team` (
+  `id` bigint(100) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `user_id` bigint(50) NOT NULL COMMENT '用户id',
+  `team_id` bigint(50) NOT NULL COMMENT '团队id',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_user_id` (`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户团队中间表';

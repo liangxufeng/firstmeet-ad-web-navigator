@@ -180,6 +180,7 @@ public class RoleService {
    *
    * @param roleIds
    */
+  @Transactional
   public void deleteRole(String[] roleIds) {
     for (int i = 0; i < roleIds.length; i++) {
       //删除角色的用户信息
@@ -193,6 +194,22 @@ public class RoleService {
       //删除角色的游戏信息
       if (roleGameRepository.findByRoleId(roleIds[i]) != null) {
         roleGameRepository.deleteByRoleId(roleIds[i]);
+      }
+      //删除角色的团队信息
+      if (roleTeamRepository.findByRoleId(roleIds[i])!=null){
+        roleTeamRepository.deleteByRoleId(roleIds[i]);
+      }
+      //删除角色的产品信息
+      if (roleProductRepository.findByRoleId(roleIds[i])!=null){
+        roleProductRepository.deleteByRoleId(roleIds[i]);
+      }
+      //删除角色的媒体信息
+      if (roleMediaRepository.findByRoleId(roleIds[i])!=null){
+        roleMediaRepository.deleteByRoleId(roleIds[i]);
+      }
+      //删除角色的媒体资源信息
+      if (roleMediaResourceRepository.findByRoleId(roleIds[i])!=null){
+        roleMediaResourceRepository.deleteByRoleId(roleIds[i]);
       }
       //删除角色的信息
       roleRepository.deleteByRoleId(roleIds[i]);
