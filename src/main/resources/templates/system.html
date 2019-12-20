@@ -55,7 +55,7 @@
             <img alt="" class="img-circle" src="../static/img/avatar4.jpg"
                  th:src="@{{serviceName}/img/avatar4.jpg(serviceName=${application.serviceName})}"/>
             <span class="username username-hide-on-mobile"
-                  th:text="${session.username}">chujian</span>
+                  th:text="${session.access_token.userName}">chujian</span>
             <i class="fa fa-angle-down"></i>
           </a>
           <ul class="dropdown-menu dropdown-menu-default">
