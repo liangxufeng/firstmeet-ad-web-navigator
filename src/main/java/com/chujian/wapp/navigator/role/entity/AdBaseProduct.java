@@ -49,13 +49,26 @@ public class AdBaseProduct implements Serializable {
   @Column(name = "status")
   private Integer status;
 
-  @Column(name = "insdt", insertable = false, updatable = false)
-  private Date insdt;
+//  @Column(name = "insdt", insertable = false, updatable = false)
+//  private Date insdt;
+  @Column(name = "ctime", insertable = false, updatable = false)
+  private Date ctime;
 
-  @Column(name = "upddt", insertable = false, updatable = false)
-  private Date upddt;
+//  @Column(name = "upddt", insertable = false, updatable = false)
+//  private Date upddt;
+  @Column(name = "utime", insertable = false, updatable = false)
+  private Date utime;
 
-  @Column(name = "opuser")
-  private String opuser;
+  @Column(name = "updator")
+  private String updator;
+
+  @Column(name = "updator_id")
+  private String updatorId;
+
+  @Column(name = "creator")
+  private String creator;
+
+  @Column(name = "creator_id")
+  private String creatorId;
 
 }

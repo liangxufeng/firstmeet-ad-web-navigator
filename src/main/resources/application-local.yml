@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 1996
   servlet:
     application-display-name: firstmeet-wapp-navigator
     contextPath: /

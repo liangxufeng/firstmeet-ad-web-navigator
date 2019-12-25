@@ -116,7 +116,7 @@ public class RoleRequestService {
     //查询角色所拥有的团队
     List<RoleTeam> roleTeamList = roleTeamRepository.findByRoleId(roleId);
     List<Integer> roleTeamDtoList = new ArrayList<>();
-    if (roleTeamList != null) {
+    if (!roleTeamList.isEmpty()) {
       for (RoleTeam roleTeam : roleTeamList) {
         roleTeamDtoList.add(roleTeam.getTeamId());
       }
@@ -140,7 +140,7 @@ public class RoleRequestService {
     //查询角色所拥有的产品
     List<RoleProduct> roleProductList = roleProductRepository.findByRoleId(roleId);
     List<Integer> roleProductDtoList = new ArrayList<>();
-    if (roleProductList!=null){
+    if (!roleProductList.isEmpty()){
       for (RoleProduct roleProduct : roleProductList) {
         roleProductDtoList.add(roleProduct.getProductId());
       }
@@ -164,7 +164,7 @@ public class RoleRequestService {
     //查出角色所拥有的媒体
     List<RoleMedia> roleMediaList = roleMediaRepository.findByRoleId(roleId);
     List<Integer> roleMediaDtoList = new ArrayList<>();
-    if (roleProductList!=null){
+    if (!roleProductList.isEmpty()){
       for (RoleMedia roleMedia : roleMediaList) {
         roleMediaDtoList.add(roleMedia.getMediaId());
       }
@@ -189,7 +189,7 @@ public class RoleRequestService {
     List<RoleMediaResource> roleMediaResourceList = roleMediaResourceRepository
         .findByRoleId(roleId);
     List<Integer> roleMediaResourceDtoList = new ArrayList<>();
-    if (roleMediaResourceList!=null){
+    if (!roleMediaResourceList.isEmpty()){
       for (RoleMediaResource roleMediaResource : roleMediaResourceList) {
         roleMediaResourceDtoList.add(roleMediaResource.getMediaResourceId());
       }
