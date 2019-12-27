@@ -45,6 +45,9 @@ public class AccessToken implements Serializable {
   @JsonProperty("product")
   private List<Integer> productList;
 
+  @JsonProperty("team")
+  private List<Integer> teamList;
+
   @JsonProperty("dept")
   private AccessDept accessDept;
 }
