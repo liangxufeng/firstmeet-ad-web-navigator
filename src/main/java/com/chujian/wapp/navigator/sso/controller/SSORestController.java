@@ -45,9 +45,8 @@ public class SSORestController {
 
   private static ObjectMapper objectMapper = new ObjectMapper();
 
-  @Value("${sso.admin}")
+  @Value("${sso.admin:}")
   private String admin;
-
 
   @Autowired
   private AccessTokenService accessTokenService;
@@ -190,8 +189,8 @@ public class SSORestController {
     }
 
     //遍历系统
-    List<AccessResource> resourceMenuList = new ArrayList<>();
     AccessResource sysAccessResource = null;
+
     for (AccessResource accessResource : resourceList) {
 
       if (accessResource.getResourceId().equals(sysResourceId) && ResourceTypeConfig.RS_TYPE_SYSTEM
@@ -201,8 +200,8 @@ public class SSORestController {
       }
 
       List<AccessResource> childList = accessResource.getChildList();
-      if (childList==null){
-        break;
+      if (childList == null) {
+        continue;
       }
       for (AccessResource childAccessResource : childList) {
         if (childAccessResource.getResourceId().equals(sysResourceId)
@@ -221,14 +220,16 @@ public class SSORestController {
     if (sysAccessResource == null) {
       return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
     }
-
     //遍历菜单
+    List<AccessResource> resourceMenuList = new ArrayList<>();
     List<AccessResource> childList = sysAccessResource.getChildList();
-    if (childList != null && !childList.isEmpty()) {
-      for (AccessResource accessResource : childList) {
-        if (accessResource.getType().equals(ResourceTypeConfig.RS_TYPE_MENU)) {
-          resourceMenuList.add(accessResource);
-        }
+    if (childList == null || childList.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
+    }
+
+    for (AccessResource accessResource : childList) {
+      if (accessResource.getType().equals(ResourceTypeConfig.RS_TYPE_MENU)) {
+        resourceMenuList.add(accessResource);
       }
     }
 
@@ -238,23 +239,7 @@ public class SSORestController {
     }
 
     for (AccessResource accessResource : resourceMenuList) {
-      List<AccessResource> childResourceList = accessResource.getChildList();
-      if (childResourceList == null || childResourceList.isEmpty()) {
-        continue;
-      }
-
       List<Menu> childMenuList = new ArrayList<>();
-      for (AccessResource childResource : childResourceList) {
-        Menu menu = Menu.builder().id(childResource.getId())
-            .parentId(childResource.getParentId())
-            .resourceId(childResource.getResourceId())
-            .resourceName(childResource.getName())
-            .resourceUrl(childResource.getUrl())
-            .resourceOrderNum(childResource.getResourceId())
-            .build();
-        childMenuList.add(menu);
-      }
-
       Menu menu = Menu.builder().id(accessResource.getId())
           .parentId(accessResource.getParentId())
           .resourceId(accessResource.getResourceId())
@@ -263,7 +248,24 @@ public class SSORestController {
           .resourceOrderNum(accessResource.getOrderNum().toString())
           .childMenuList(childMenuList).build();
       menuList.add(menu);
+
+      List<AccessResource> childResourceList = accessResource.getChildList();
+      if (childResourceList == null || childResourceList.isEmpty()) {
+        continue;
+      }
+      for (AccessResource childResource : childResourceList){
+        Menu childMenu = Menu.builder().id(childResource.getId())
+            .parentId(childResource.getParentId())
+            .resourceId(childResource.getResourceId())
+            .resourceName(childResource.getName())
+            .resourceUrl(childResource.getUrl())
+            .resourceOrderNum(childResource.getResourceId())
+            .build();
+        childMenuList.add(childMenu);
+      }
+      menu.setChildMenuList(childMenuList);
     }
+
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("menuList", menuList);
     return ResponseEntity.ok(jsonObject);

@@ -7,10 +7,22 @@ import com.chujian.wapp.navigator.dept.respository.DeptRepository;
 import com.chujian.wapp.navigator.game.entity.Game;
 import com.chujian.wapp.navigator.game.respository.GameRepository;
 import com.chujian.wapp.navigator.resource.respository.ResourceRepository;
+import com.chujian.wapp.navigator.role.entity.AdBaseProduct;
+import com.chujian.wapp.navigator.role.entity.Media;
+import com.chujian.wapp.navigator.role.entity.MediaResource;
 import com.chujian.wapp.navigator.role.entity.Role;
 import com.chujian.wapp.navigator.role.entity.RoleGame;
+import com.chujian.wapp.navigator.role.entity.RoleMedia;
+import com.chujian.wapp.navigator.role.entity.RoleMediaResource;
+import com.chujian.wapp.navigator.role.entity.RoleProduct;
 import com.chujian.wapp.navigator.role.entity.RoleResource;
+import com.chujian.wapp.navigator.role.respository.AdProductRepository;
+import com.chujian.wapp.navigator.role.respository.MediaRepository;
+import com.chujian.wapp.navigator.role.respository.MediaResourceRepository;
 import com.chujian.wapp.navigator.role.respository.RoleGameRepository;
+import com.chujian.wapp.navigator.role.respository.RoleMediaRepository;
+import com.chujian.wapp.navigator.role.respository.RoleMediaResourceRepository;
+import com.chujian.wapp.navigator.role.respository.RoleProductRepository;
 import com.chujian.wapp.navigator.role.respository.RoleRepository;
 import com.chujian.wapp.navigator.role.respository.RoleResourceRepository;
 import com.chujian.wapp.navigator.sso.model.AccessDept;
@@ -35,6 +47,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +70,6 @@ public class AccessTokenService {
 
   @Value("${sso.admin}")
   private String admin;
-
 
   @Resource
   private AccessKeyProperties accessKeyProperties;
@@ -89,6 +101,21 @@ public class AccessTokenService {
   @Autowired
   private DeptRepository deptRepository;
 
+  @Autowired
+  private RoleMediaRepository roleMediaRepository;
+  @Autowired
+  private MediaRepository mediaRepository;
+
+  @Autowired
+  private RoleMediaResourceRepository roleMediaResourceRepository;
+  @Autowired
+  private MediaResourceRepository mediaResourceRepository;
+
+  @Autowired
+  private RoleProductRepository roleProductRepository;
+  @Autowired
+  private AdProductRepository productRepository;
+
   public static JSONObject getTokenInfo(String tokenStr) throws Exception {
     String payload = tokenStr.split("\\.")[1];
     return JSONObject.parseObject(new String(Base64Utils.decodeFromString(payload), "UTF-8"));
@@ -106,6 +133,9 @@ public class AccessTokenService {
     List<AccessRole> roleList = new ArrayList<>();
     List<AccessResource> resourceList = new ArrayList<>();
     List<AccessGame> gameList = new ArrayList<>();
+    List<Integer> mediaList = new ArrayList<>();
+    List<Integer> mediaResourceList = new ArrayList<>();
+    List<Integer> productList = new ArrayList<>();
 
     /*======组装token=========*/
     // 将  用户 角色 游戏  资源 放入token
@@ -129,6 +159,18 @@ public class AccessTokenService {
           .build();
       roleList.add(accessRole);
 
+      List<RoleMedia> roleMediaList = roleMediaRepository.findByRoleId(userRole.getRoleId());
+      mediaList = roleMediaList.stream().map(RoleMedia::getMediaId).collect(Collectors.toList());
+
+      List<RoleMediaResource> roleMediaResourceList = roleMediaResourceRepository
+          .findByRoleId(userRole.getRoleId());
+      mediaResourceList = roleMediaResourceList.stream()
+          .map(RoleMediaResource::getMediaResourceId).collect(Collectors.toList());
+
+      List<RoleProduct> roleProductList = roleProductRepository.findByRoleId(userRole.getRoleId());
+      productList = roleProductList.stream().map(RoleProduct::getProductId)
+          .collect(Collectors.toList());
+
       List<RoleResource> roleResourceList = roleResourceRepository
           .findByRoleId(role.getRoleId());
       roleResourceMap.put(count++, roleResourceList);
@@ -143,6 +185,16 @@ public class AccessTokenService {
             .name(game.getName()).build();
         gameList.add(accessGame);
       }
+    }
+
+    if (!mediaList.isEmpty()) {
+      mediaList = mediaList.stream().distinct().collect(Collectors.toList());
+    }
+    if (!mediaResourceList.isEmpty()) {
+      mediaResourceList = mediaResourceList.stream().distinct().collect(Collectors.toList());
+    }
+    if (!productList.isEmpty()) {
+      productList = productList.stream().distinct().collect(Collectors.toList());
     }
 
     List<RoleResource> resultRoleResourceList = null;
@@ -193,6 +245,10 @@ public class AccessTokenService {
       }
     }
 
+    if (!allResource.isEmpty()) {
+      allResource = allResource.stream().distinct().collect(Collectors.toList());
+    }
+
     for (AccessResource accessResource : allResource) {
       if ("0".equals(accessResource.getParentId())) {
         resourceList.add(findChildren(accessResource, allResource));
@@ -204,8 +260,8 @@ public class AccessTokenService {
 
     AccessToken accessToken = AccessToken.builder().userId(userId).userName(userName).iat(issueAt)
         .exp(expired).version(version).roleList(roleList).gameList(gameList)
-        .resourceList(resourceList).accessDept(accessDept)
-        .build();
+        .resourceList(resourceList).accessDept(accessDept).mediaList(mediaList)
+        .mediaResourceList(mediaResourceList).productList(productList).build();
     return accessToken;
   }
 
@@ -337,6 +393,9 @@ public class AccessTokenService {
     List<AccessRole> roleList = new ArrayList<>();
     List<AccessResource> resourceList = new ArrayList<>();
     List<AccessGame> gameList = new ArrayList<>();
+    List<Integer> mediaList = new ArrayList<>();
+    List<Integer> mediaResourceList = new ArrayList<>();
+    List<Integer> productList = new ArrayList<>();
 
     /*======组装token=========*/
     // 将  用户 角色 游戏  资源 放入token
@@ -352,6 +411,20 @@ public class AccessTokenService {
       AccessGame accessGame = AccessGame.builder().id(game.getId().toString())
           .name(game.getName()).build();
       gameList.add(accessGame);
+    }
+
+    List<Media> roleMediaList = mediaRepository.findAll();
+    mediaList = roleMediaList.stream().map(Media::getId).collect(Collectors.toList());
+
+    List<MediaResource> roleMediaResourceList = mediaResourceRepository.findAll();
+    mediaResourceList = roleMediaResourceList.stream().map(MediaResource::getId).collect(
+        Collectors.toList());
+
+    List<AdBaseProduct> roleProductList = productRepository.findAll();
+    if (!roleProductList.isEmpty()){
+      for (AdBaseProduct adBaseProduct : roleProductList) {
+        productList.add(Integer.valueOf(adBaseProduct.getId().toString()));
+      }
     }
 
     List<AccessResource> allResource = new ArrayList<>();
@@ -381,8 +454,8 @@ public class AccessTokenService {
 
     AccessToken accessToken = AccessToken.builder().userId(userId).userName(userName).iat(issueAt)
         .exp(expired).version(version).roleList(roleList).gameList(gameList)
-        .resourceList(resourceList).accessDept(accessDept)
-        .build();
+        .resourceList(resourceList).accessDept(accessDept).mediaList(mediaList)
+        .mediaResourceList(mediaResourceList).productList(productList).build();
     return accessToken;
   }
 
