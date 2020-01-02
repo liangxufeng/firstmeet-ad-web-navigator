@@ -25,6 +25,9 @@ public class AdBaseTeamDTO implements Serializable {
   @Column(name = "tid")
   private String tid;
 
+  @Column(name = "tcode")
+  private String tcode;
+
   @Column(name = "name")
   private String name;
 
@@ -34,13 +37,22 @@ public class AdBaseTeamDTO implements Serializable {
   @Column(name = "status")
   private Integer status;
 
-  @Column(name = "insdt", insertable = false, updatable = false)
-  private Date insdt;
+  @Column(name = "ctime")
+  private Date ctime;
 
-  @Column(name = "upddt", insertable = false, updatable = false)
-  private Date upddt;
+  @Column(name = "utime")
+  private Date utime;
 
-  @Column(name = "opuser")
-  private String opuser;
+  @Column(name = "updator")
+  private String updator;
+
+  @Column(name = "updator_id")
+  private String updatorId;
+
+  @Column(name = "creator")
+  private String creator;
+
+  @Column(name = "creator_id")
+  private String creatorId;
 
 }
