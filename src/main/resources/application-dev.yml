@@ -84,7 +84,7 @@ ups.wapp.service.name: ""
 chujian.sso:
   token:
     #7 * 24 * 60 * 60
-    expire-seconds: 604800
+    expire-seconds: 2592000
     key:
       jks-filepath: 'chujian_sso.jks'
       password: 'chujian_sso_pass'
