@@ -60,7 +60,7 @@ public class AccessControlInterceptor extends HandlerInterceptorAdapter {
       return true;
     }
     String[] allowedUrls = {"/sso/auth", "/sso/token", "/logout", "/sso/login", "/sso/depts",
-        "/sso/menus", "/sso/check_token", "/sso/logout"};
+        "/sso/menus", "/sso/check_token", "/sso/logout", "/sso/users"};
     for (String allowedUrl : allowedUrls) {
       if (url.startsWith(allowedUrl)) {
         return true;

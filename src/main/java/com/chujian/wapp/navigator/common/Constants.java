@@ -15,7 +15,7 @@ public class Constants {
   public static final String REDIS_KEY_AUTH_CODES = "auth_codes";
   public static final String REDIS_KEY_USER_TOKEN_VERSION = "user_token_version";
 
-  public static final int FIRST_PAGE = 1;
+  public static final int FIRST_PAGE = 0;
   public static final int MAX_PAGE_NUM = 5000;
 
 }
