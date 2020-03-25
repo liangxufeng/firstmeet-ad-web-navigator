@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -268,6 +269,118 @@ public class SSORestController {
 
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("menuList", menuList);
+    return ResponseEntity.ok(jsonObject);
+  }
+
+  @RequestMapping(value = "/users", method = {RequestMethod.GET, RequestMethod.POST})
+  @ResponseBody
+  public ResponseEntity getUsers(@RequestParam(Constants.REQUEST_PARAM_TOKEN) String tokenStr,
+      @RequestParam(Constants.REQUEST_PARAM_SYSTEM_RESOURCE_ID) String sysResourceId) {
+    String logHead = "getUsers";
+    log.info("{} begin", logHead);
+    //验证tokenStr的正确性
+    if (StringUtils.isBlank(tokenStr) || StringUtils.isBlank(sysResourceId)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    AccessToken accessToken = null;
+    try {
+      accessToken = accessTokenService.decodeToken(tokenStr);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    if (accessToken == null || !accessTokenService.isValid(accessToken)) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    /*List<AccessResource> resourceList = accessToken.getResourceList();
+    if (resourceList == null || resourceList.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
+    }
+
+    //遍历系统
+    AccessResource sysAccessResource = null;
+
+    for (AccessResource accessResource : resourceList) {
+
+      if (accessResource.getResourceId().equals(sysResourceId) && ResourceTypeConfig.RS_TYPE_SYSTEM
+          .equals(accessResource.getType())) {
+        sysAccessResource = accessResource;
+        break;
+      }
+
+      List<AccessResource> childList = accessResource.getChildList();
+      if (childList == null) {
+        continue;
+      }
+      for (AccessResource childAccessResource : childList) {
+        if (childAccessResource.getResourceId().equals(sysResourceId)
+            && ResourceTypeConfig.RS_TYPE_SYSTEM
+            .equals(childAccessResource.getType())) {
+          sysAccessResource = childAccessResource;
+          break;
+        }
+
+        if (sysAccessResource != null) {
+          break;
+        }
+      }
+    }
+
+    if (sysAccessResource == null) {
+      return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
+    }
+    //遍历菜单
+    List<AccessResource> resourceMenuList = new ArrayList<>();
+    List<AccessResource> childList = sysAccessResource.getChildList();
+    if (childList == null || childList.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
+    }
+
+    for (AccessResource accessResource : childList) {
+      if (accessResource.getType().equals(ResourceTypeConfig.RS_TYPE_MENU)) {
+        resourceMenuList.add(accessResource);
+      }
+    }
+
+    List<Menu> menuList = new ArrayList<>();
+    if (resourceMenuList.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.OK).body(resourceMenuList);
+    }
+
+    for (AccessResource accessResource : resourceMenuList) {
+      List<Menu> childMenuList = new ArrayList<>();
+      Menu menu = Menu.builder().id(accessResource.getId())
+          .parentId(accessResource.getParentId())
+          .resourceId(accessResource.getResourceId())
+          .resourceName(accessResource.getName())
+          .resourceUrl(accessResource.getUrl())
+          .resourceOrderNum(accessResource.getOrderNum().toString())
+          .childMenuList(childMenuList).build();
+      menuList.add(menu);
+
+      List<AccessResource> childResourceList = accessResource.getChildList();
+      if (childResourceList == null || childResourceList.isEmpty()) {
+        continue;
+      }
+      for (AccessResource childResource : childResourceList){
+        Menu childMenu = Menu.builder().id(childResource.getId())
+            .parentId(childResource.getParentId())
+            .resourceId(childResource.getResourceId())
+            .resourceName(childResource.getName())
+            .resourceUrl(childResource.getUrl())
+            .resourceOrderNum(childResource.getResourceId())
+            .build();
+        childMenuList.add(childMenu);
+      }
+      menu.setChildMenuList(childMenuList);
+    }
+
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("menuList", menuList);*/
+    JSONObject jsonObject = userService.findUserList(Constants.FIRST_PAGE, Constants.MAX_PAGE_NUM, null);
+    log.info("{} end result size ", logHead, jsonObject.size());
     return ResponseEntity.ok(jsonObject);
   }
 
