@@ -19,6 +19,7 @@ server:
       directory: ${FIRSTMEET_MSERVICE_DATA_BASEDIR:.}/logs/${HOSTNAME:1}/access-log
     manager.enable: false
     manager.context-path: '/data/webapps/manager'
+  max-http-header-size: 10000000
 
 #actuator配置
 management:
@@ -32,9 +33,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
     platform: mysql
-    url: jdbc:mysql://192.168.1.220:3306/ad_manager?useSSL=false&useUnicode=true&characterEncoding=utf-8&autoReconnect=true
-    username: kaifa
-    password: chujian8
+    url: jdbc:mysql://10.66.170.110:3306/ad_manager?useUnicode=true&characterEncoding=utf-8
+    username: ad2_user
+    password: Ad2*356pro9%djh90Ah
     druid:
       initial-size: 5
       min-idle: 5
@@ -83,7 +84,7 @@ ups.wapp.service.name: ""
 chujian.sso:
   token:
     #7 * 24 * 60 * 60
-    expire-seconds: 604800
+    expire-seconds: 259200000
     key:
       jks-filepath: 'chujian_sso.jks'
       password: 'chujian_sso_pass'
@@ -92,13 +93,13 @@ chujian.sso:
 
 spring.redisson:
   config:
-    name: classpath:redisson/redisson-local.yml
+    name: classpath:redisson/redisson-prod.yml
 
 spring.redis:
   database: 0
-  host: 192.168.1.220
+  host: 10.66.166.230
   port: 6379
-  password: chujian8
+  password: Ad2xS%D5oHvCj8d7Y
   lettuce.pool.max-active: 20
   lettuce.pool.max-wait: -1
   lettuce.pool.max-idle: 10
@@ -110,14 +111,14 @@ spring.session:
 
 resource:
   types:
-    - type: system
-      name: 系统
-    - type: menu
-      name: 菜单
-    - type: button
-      name: 按钮
-    - type: link
-      name: 链接
+  - type: system
+    name: 系统
+  - type: menu
+    name: 菜单
+  - type: button
+    name: 按钮
+  - type: link
+    name: 链接
 
 sso:
   admin: 'admin'
