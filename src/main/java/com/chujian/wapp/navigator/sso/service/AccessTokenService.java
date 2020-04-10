@@ -318,9 +318,12 @@ public class AccessTokenService {
   }
 
   public String getAccessTokenString(String authCode) {
+    String logHead = "getAccessTokenString";
+    log.info("{} begin", logHead);
     if (StringUtils.isBlank(authCode)) {
       return null;
     }
+    log.info("{} end", logHead);
     return (String) redissonClient.getMap(Constants.REDIS_KEY_AUTH_CODES).get(authCode);
   }
 

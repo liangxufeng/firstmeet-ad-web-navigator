@@ -118,6 +118,8 @@ public class SSORestController {
   @RequestMapping(value = "token", method = {RequestMethod.GET, RequestMethod.POST})
   public ResponseEntity ssoToken(HttpServletRequest request,
       @RequestParam(Constants.REQUEST_PARAM_CODE) String authCode) {
+    String logHead = "ssoToken";
+    log.info("{} begin authCode {}", logHead, authCode);
     String accessTokenStr = accessTokenService.getAccessTokenString(authCode);
     if (StringUtils.isBlank(accessTokenStr)) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -134,6 +136,7 @@ public class SSORestController {
     accessTokenService.deleteAccessToken(authCode);
     JSONObject tokeObject = new JSONObject();
     tokeObject.put("access_token", accessTokenStr);
+    log.info("{} end authCode {}", logHead, authCode);
     return ResponseEntity.ok(tokeObject);
   }
 
