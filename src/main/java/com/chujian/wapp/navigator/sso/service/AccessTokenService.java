@@ -313,7 +313,7 @@ public class AccessTokenService {
     String originalStr = objectMapper.writeValueAsString(accessToken);
     log.info("Original String: {}", originalStr);
     String encodedStr = JWTUtil.encode(originalStr, accessKeyProperties);
-    log.info("Access Token: {}", encodedStr);
+    log.info("Access Token: {}", encodedStr.subSequence(0, 10));
     return encodedStr;
   }
 
