@@ -26,9 +26,12 @@ public class SessionUtils {
   public static void saveAccessToken(HttpServletRequest request, AccessToken accessToken,
       String accessTokenStr)
       throws Exception {
+    String logHead = "saveAccessToken";
+    log.info("{} begin", logHead);
     HttpSession session = request.getSession();
     session.setAttribute(Constants.SESSION_KEY_ACCESS_TOKEN, accessToken);
     session.setAttribute(Constants.SESSION_KEY_ACCESS_TOKEN_STR, accessTokenStr);
+    log.info("{} end", logHead);
   }
 
   public static AccessToken getAccessToken(HttpServletRequest request) {
