@@ -1,5 +1,5 @@
-FROM docker1.16801.com/common/alpine-java:8u191b12_server-jre_unlimited
-MAINTAINER dongyuqni <dongyunqi@16801.com>
+FROM registry.cn-hangzhou.aliyuncs.com/xliangf/nginx:1.0-SNAPSHOT
+MAINTAINER liangxufeng <1158539495@qq.com>
 ENV TZ=Asia/Shanghai
 #设置时区
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo '$TZ' > /etc/timezone
