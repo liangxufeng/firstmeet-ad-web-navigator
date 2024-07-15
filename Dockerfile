@@ -6,6 +6,6 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo '$TZ' > /etc/timezone
 RUN gradlew clean
 RUN gradlew clean classes --refresh-dependencies
 RUN gradlew build
-ADD /build/distributions/app.tar /
-CMD /app/bin/startup
+#ADD /build/distributions/app.tar /
+#CMD /app/bin/startup
 EXPOSE 8080
