@@ -1,4 +1,4 @@
-FROM registry.cn-hangzhou.aliyuncs.com/xliangf/nginx:1.0-SNAPSHOT
+FROM registry.cn-hangzhou.aliyuncs.com/xliangf/java:8
 MAINTAINER liangxufeng <1158539495@qq.com>
 ENV TZ=Asia/Shanghai
 #设置时区
