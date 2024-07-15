@@ -4,7 +4,7 @@ ENV TZ=Asia/Shanghai
 #设置时区
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo '$TZ' > /etc/timezone
 RUN chmod +x /gradlew
-RUN gradlew clean
+#RUN gradlew clean
 RUN gradlew clean classes --refresh-dependencies
 RUN gradlew build
 #ADD /build/distributions/app.tar /
