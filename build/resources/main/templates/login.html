@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <title>初见后台管理系统登录</title>
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="初见后台管理系统登录" name="description"/>
+  <meta content="chujian" name="author"/>
+  <link href="../static/css/font-awesome/css/font-awesome.min.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/font-awesome/css/font-awesome.min.css(serviceName=${application.serviceName})}"/>
+  <link href="../static/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+        th:href="@{{serviceName}/bootstrap/css/bootstrap.min.css(serviceName=${application.serviceName})}">
+  <link href="../static/css/layout.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/layout.css(serviceName=${application.serviceName})}"/>
+  <link href="../static/css/themes/darkblue.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/themes/darkblue.css(serviceName=${application.serviceName})}"/>
+  <link href="../static/img/favicon.ico" rel="shortcut icon"
+        th:href="@{{serviceName}/img/favicon.ico(serviceName=${application.serviceName})}"/>
+  <link href="../static/css/login.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/login.css(serviceName=${application.serviceName})}"
+        type="text/css">
+
+</head>
+
+<body>
+<h2 class="theme-heading">初见后台管理系统登录</h2>
+<div class="dex-container">
+  <div class="theme-panel">
+    <div class="login_face">
+      <img class="userAvatar" src="../static/img/favicon.ico" th:src="@{/img/favicon.ico}">
+    </div>
+    <form id="loginForm" method="post">
+      <input id="sys_id" name="sys_id" th:value="${sys_id}" type="hidden"/>
+      <div class="theme-form-row">
+        <div class="theme-form-label">
+          <label>账号</label>
+        </div>
+        <input autofocus class="theme-form-input" id="account" name="login" placeholder="请输入账号"
+               required
+               tabindex="1" type="text"/>
+        <div class="wrong-message" id="account-message"></div>
+      </div>
+      <div class="theme-form-row">
+        <div class="theme-form-label">
+          <label for="password">密码</label>
+        </div>
+        <input class="theme-form-input" id="password" name="password" placeholder="请输入密码" required
+               tabindex="2"
+               type="password"/>
+        <div class="wrong-message" id="password-message"></div>
+      </div>
+      <button class="dex-btn theme-btn--primary" id="submit-login" tabindex="3" type="button">登录
+      </button>
+    </form>
+  </div>
+</div>
+<!-- END CONTAINER -->
+<script src="../static/js/jquery.min.js"
+        th:src="@{{serviceName}/js/jquery.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"
+        th:src="@{{serviceName}/bootstrap/js/bootstrap.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../static/js/metronic.js"
+        th:src="@{{serviceName}/js/metronic.js(serviceName=${application.serviceName})}"></script>
+<script src="../static/js/layout.js"
+        th:src="@{{serviceName}/js/layout.js(serviceName=${application.serviceName})}"></script>
+<script src="../static/js/sso/login.js"
+        th:src="@{{serviceName}/js/sso/login.js(serviceName=${application.serviceName})}"></script>
+
+<script type="text/javascript">
+  if (window.top != window.self) {
+    top.location = this.location;
+  }
+</script>
+</body>
+
+</html>
+

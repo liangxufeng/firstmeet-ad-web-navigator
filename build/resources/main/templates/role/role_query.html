@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>角色管理</title>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport">
+  <link href="../../static/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+        th:href="@{{serviceName}/bootstrap/css/bootstrap.min.css(serviceName=${application.serviceName})}">
+  <link href="../../static/css/bootstrap-table.min.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/bootstrap-table.min.css(serviceName=${application.serviceName})}">
+  <link href="../../static/css/style.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/style.css(serviceName=${application.serviceName})}">
+  <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css"
+        rel="stylesheet">
+</head>
+
+<body>
+
+<div class="alert alert-success">角色管理</div>
+
+<div class="form-inline" role="form">
+  <button class="btn btn-success"
+          id="rolePer-btn"
+          th:if="${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_ROLE_RESOURCE)}">
+    分配资源权限
+  </button>
+  <button class="btn btn-success"
+          id="roleGame-btn"
+          th:if="${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_ROLE_GAME)}">
+    分配游戏权限
+  </button>
+  <button class="btn btn-success" id="roleData-btn">
+    分配数据权限
+  </button>
+  <button class="btn btn-success" style="margin-left: 20px"
+          id="add-btn"
+          th:if="${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_ROLE_ADD)}">
+    添加角色
+  </button>
+  <button class="btn btn-success"
+          id="edit-btn"
+          th:if="${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_ROLE_EDIT)}">
+    编辑角色
+  </button>
+  <button class="btn btn-success"
+          id="del-btn"
+          th:if="${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_ROLE_DEL)}">
+    删除角色
+  </button>
+
+  <input class="form-control" id="searchRoleName" placeholder="角色名称搜索" style="margin-left: 20px;"
+         type="text">
+  <input class="btn btn-primary" id="search" type="button" value="搜索">
+  <input class="btn btn-primary" id="reset" type="button" value="重置">
+
+</div>
+
+<div class="panel-body">
+  <a class="display-hide" href="/role"
+     id="getRoleUrl" th:href="@{{serviceName}/role(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/save_role"
+     id="saveRoleUrl"
+     th:href="@{{serviceName}/save_role(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/delete_role"
+     id="deleteRoleUrl"
+     th:href="@{{serviceName}/delete_role(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/edit_role"
+     id="editRoleUrl"
+     th:href="@{{serviceName}/edit_role(serviceName=${application.serviceName})}"></a>
+
+  <table class="table table-striped" id="roleTable"></table>
+
+  <div class="admin-mask" style="display: none;">
+    <!-- 添加 -->
+    <div class="web-box" style="display: none;">
+      <span class="glyphicon glyphicon-remove websetContClose"></span>
+      <h4 id="admin-title">添加角色</h4>
+      <hr/>
+      <form id="roleForm">
+        <input id="roleId" name="roleId" type="hidden">
+        <div class="form-group">
+          <label for="roleName">角色名称</label>
+          <input class="form-control" id="roleName" name="roleName" type="text">
+        </div>
+
+        <div class="form-group">
+          <label for="roleRemark">角色说明</label>
+          <input class="form-control" id="roleRemark" name="roleRemark" type="text">
+        </div>
+
+        <hr/>
+        <div class=" form-group btn-bottom-bar">
+          <button class="btn btn-primary" id="btn-sure-add" name="submit"
+                  th:if="${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_ROLE_EDIT)}">
+            确定
+          </button>
+          <button class="btn btn-primary" id="btn-sure-close" type="button">取消</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="../../static/js/jquery.min.js"
+        th:src="@{{serviceName}/js/jquery.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/bootstrap/js/bootstrap.min.js"
+        th:src="@{{serviceName}/bootstrap/js/bootstrap.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/bootstrap-table.min.js"
+        th:src="@{{serviceName}/js/bootstrap-table.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/bootstrap-table-zh-CN.min.js"
+        th:src="@{{serviceName}/js/bootstrap-table-zh-CN.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/common.js"
+        th:src="@{{serviceName}/js/common.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/role/role_query.js"
+        th:src="@{{serviceName}/js/role/role_query.js(serviceName=${application.serviceName})}"></script>
+<script
+    src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+</body>
+</html>

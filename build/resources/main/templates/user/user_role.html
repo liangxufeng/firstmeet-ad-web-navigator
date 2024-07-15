@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>角色管理</title>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport">
+  <link href="../../static/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+        th:href="@{{serviceName}/bootstrap/css/bootstrap.min.css(serviceName=${application.serviceName})}">
+  <link href="../../static/css/bootstrap-table.min.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/bootstrap-table.min.css(serviceName=${application.serviceName})}">
+  <link href="../../static/css/style.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/style.css(serviceName=${application.serviceName})}">
+  <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css"
+        rel="stylesheet">
+</head>
+
+<body>
+<div class="alert alert-success" tyle="
+    padding: 17px;
+    margin-bottom: 15px;
+    border: 0px solid transparent;
+    border-radius: 10px;">分配 [[${user.userName}]] 用户角色
+</div>
+<!--<div class="alert alert-info" style="    color: #141514;
+    background-color: #d9edf7;
+    margin-top: -15px;
+    width: auto;
+    border-radius: 4px;" th:text="'当前用户:  '+${user.userName}">当前用户
+</div>-->
+<div class="form-inline" role="form">
+  <button class="btn btn-success" id="change-sure-btn">确认修改</button>
+  <button class="btn btn-primary" onclick="history.back(-1);" type="button">返回</button>
+</div>
+
+<div class="panel-body">
+  <a class="display-hide" href="/userRoles"
+     id="getUserRolesUrl"
+     th:href="@{{serviceName}/userRoles(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/change_userRole"
+     id="changeUserRoleUrl"
+     th:href="@{{serviceName}/change_userRole(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/searchByRoleName"
+     id="searchByRoleNameUrl"
+     th:href="@{{serviceName}/searchByRoleName(serviceName=${application.serviceName})}"></a>
+  <table class="table table-bordered table-hover" id="roleTable">
+    <thead>
+    <tr>
+      <th th:width="39px"></th>
+      <th>角色名称</th>
+      <th>角色说明</th>
+      <th hidden>角色ID</th>
+      <th hidden>用户ID</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="role : ${roleList}">
+      <!--当用户对应的role集合包含当前用户的id时 回显选中-->
+      <td><input name="userRole" style="width: 15px; height: 15px;"
+                 th:attr="checked=${userRoleStr.contains(role.roleId)?true:false}"
+                 th:type="checkbox">
+      </td>
+      <td th:text="${role.roleName}"></td>
+      <td th:text="${role.roleRemark}"></td>
+      <td hidden th:name="roleId" th:text="${role.roleId}"></td>
+      <td hidden id="userId" th:name="userId" th:text="${user.userId}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<script src="../../static/js/jquery.min.js"
+        th:src="@{{serviceName}/js/jquery.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/bootstrap/js/bootstrap.min.js"
+        th:src="@{{serviceName}/bootstrap/js/bootstrap.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/bootstrap-table.min.js"
+        th:src="@{{serviceName}/js/bootstrap-table.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/bootstrap-table-zh-CN.min.js"
+        th:src="@{{serviceName}/js/bootstrap-table-zh-CN.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/common.js"
+        th:src="@{{serviceName}/js/common.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/user/user_role.js"
+        th:src="@{{serviceName}/js/user/user_role.js(serviceName=${application.serviceName})}"></script>
+<script
+    src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+</body>
+</html>

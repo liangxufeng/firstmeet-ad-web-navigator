@@ -1,0 +1,47 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.chujian.wapp.navigator.utils.AccessKeyProperties",
+      "name": "chujian.sso.token.key",
+      "type": "com.chujian.wapp.navigator.utils.AccessKeyProperties"
+    },
+    {
+      "sourceType": "com.chujian.wapp.navigator.resource.model.ResourceTypeConfig",
+      "name": "resource",
+      "type": "com.chujian.wapp.navigator.resource.model.ResourceTypeConfig"
+    },
+    {
+      "sourceType": "com.chujian.wapp.navigator.sso.model.ACL",
+      "name": "resources",
+      "type": "com.chujian.wapp.navigator.sso.model.ACL"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.chujian.wapp.navigator.utils.AccessKeyProperties",
+      "name": "chujian.sso.token.key.alias",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.chujian.wapp.navigator.utils.AccessKeyProperties",
+      "name": "chujian.sso.token.key.jks-filepath",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.chujian.wapp.navigator.utils.AccessKeyProperties",
+      "name": "chujian.sso.token.key.password",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.chujian.wapp.navigator.utils.AccessKeyProperties",
+      "name": "chujian.sso.token.key.public-key-string",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.chujian.wapp.navigator.resource.model.ResourceTypeConfig",
+      "name": "resource.types",
+      "type": "java.util.List<com.chujian.wapp.navigator.resource.model.TypeInfo>"
+    }
+  ]
+}

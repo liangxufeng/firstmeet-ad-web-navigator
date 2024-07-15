@@ -1,0 +1,63 @@
+.ztree li span.button.add {
+  margin-left: 2px;
+  margin-right: -1px;
+  background-position: -144px 0;
+  vertical-align: top;
+  *vertical-align: middle
+}
+
+.ztree li span.button.system_ico_open {
+  margin-right: 5px;
+  background: url(./img/diy/system.png) no-repeat scroll 0 0 transparent;
+  vertical-align: top;
+  *vertical-align: middle
+}
+
+.ztree li span.button.system_ico_close {
+  margin-right: 5px;
+  background: url(./img/diy/system.png) no-repeat scroll 0 0 transparent;
+  vertical-align: top;
+  *vertical-align: middle
+}
+
+.ztree li span.button.system_ico_docu {
+  margin-right: 5px;
+  background: url(./img/diy/system.png) no-repeat scroll 0 0 transparent;
+  vertical-align: top;
+  *vertical-align: middle
+}
+
+.ztree li span.button.menu_ico_open, .ztree li span.button.menu_ico_close {
+  margin-right: 5px;
+  background: url(./img/diy/menu.png) no-repeat scroll 0 0 transparent;
+  vertical-align: top;
+  *vertical-align: middle
+}
+
+.ztree li span.button.menu_ico_docu {
+  margin-right: 5px;
+  background: url(./img/diy/menu.png) no-repeat scroll 0 0 transparent;
+  vertical-align: top;
+  *vertical-align: middle
+}
+
+.ztree li span.button.link_ico_open, .ztree li span.button.link_ico_close {
+  margin-right: 5px;
+  background: url(./img/diy/link.png) no-repeat scroll 0 0 transparent;
+  vertical-align: top;
+  *vertical-align: middle
+}
+
+.ztree li span.button.link_ico_docu {
+  margin-right: 5px;
+  background: url(./img/diy/link.png) no-repeat scroll 0 0 transparent;
+  vertical-align: top;
+  *vertical-align: middle
+}
+
+.ztree li span.button.button_ico_docu {
+  margin-right: 5px;
+  background: url(./img/diy/button.png) no-repeat scroll 0 0 transparent;
+  vertical-align: top;
+  *vertical-align: middle
+}

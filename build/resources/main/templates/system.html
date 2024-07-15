@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <title>初见AD后台管理系统</title>
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="初见AD后台管理系统" name="description"/>
+  <meta content="chujian" name="author"/>
+  <link href="../static/css/font-awesome/css/font-awesome.min.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/font-awesome/css/font-awesome.min.css(serviceName=${application.serviceName})}"/>
+  <link href="../static/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+        th:href="@{{serviceName}/bootstrap/css/bootstrap.min.css(serviceName=${application.serviceName})}">
+  <link href="../static/css/layout.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/layout.css(serviceName=${application.serviceName})}"/>
+  <link href="../static/css/themes/darkblue.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/themes/darkblue.css(serviceName=${application.serviceName})}"/>
+  <link href="../static/img/favicon.ico" rel="shortcut icon"
+        th:href="@{{serviceName}/img/favicon.ico(serviceName=${application.serviceName})}"/>
+  <base target="iframe"/>
+</head>
+
+<body
+    class="page-header-fixed page-quick-sidebar-over-content page-sidebar-closed-hide-logo page-container-bg-solid">
+<!-- BEGIN HEADER -->
+<div class="page-header navbar navbar-fixed-top">
+  <!-- BEGIN HEADER INNER -->
+  <div class="page-header-inner">
+
+    <!-- BEGIN LOGO -->
+    <div class="page-logo">
+      <a href="./index.html" target="_self"
+         th:href="@{${url}==0 ? '/index' : '/index?url='+${url}}">
+        <img alt="logo"
+             class="admin-logo logo-default"
+             src="../static/img/chujian_logo.png"
+             style="margin-top: 5px;"
+             th:src="@{{serviceName}/img/chujian_logo.png(serviceName=${application.serviceName})}"
+             width=90/>
+      </a>
+      <div class="menu-toggler sidebar-toggler hide">
+      </div>
+    </div>
+    <!-- END LOGO -->
+
+    <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+    <a class="menu-toggler responsive-toggler" data-target=".navbar-collapse" data-toggle="collapse"
+       href="javascript:">
+    </a>
+    <div class="top-menu">
+      <ul class="nav navbar-nav pull-right">
+        <li class="dropdown dropdown-user">
+          <a class="dropdown-toggle" data-close-others="true" data-hover="dropdown"
+             data-toggle="dropdown" href="javascript:">
+            <img alt="" class="img-circle" src="../static/img/avatar4.jpg"
+                 th:src="@{{serviceName}/img/avatar4.jpg(serviceName=${application.serviceName})}"/>
+            <span class="username username-hide-on-mobile"
+                  th:text="${session.access_token.userName}">chujian</span>
+            <i class="fa fa-angle-down"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-default">
+            <li>
+              <a href="#"
+                 th:href="@{{serviceName}/password_change(serviceName=${application.serviceName})}">修改密码</a>
+            </li>
+           <!-- <li>
+              <a href="#" target="_self"
+                 th:href="@{{serviceName}/logout(serviceName=${application.serviceName})}">退出</a>
+            </li>-->
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <!-- END RESPONSIVE MENU TOGGLER -->
+  </div>
+  <!-- END HEADER INNER -->
+</div>
+<!-- END HEADER -->
+
+<div class="clearfix">
+</div>
+
+<div class="page-container">
+  <!-- BEGIN SIDEBAR -->
+  <div class="page-sidebar-wrapper">
+    <div class="page-sidebar navbar-collapse collapse" th:if="${session.access_token} != null">
+      <ul class="page-sidebar-menu" data-auto-scroll="true" data-keep-expanded="false"
+          data-slide-speed="200"
+          th:each="firstAccessResource : ${resourceMenuList}"
+          th:if="${firstAccessResource.resourceId} eq 'sys'">
+        <li class="sidebar-toggler-wrapper" style="margin: 10px 0px;">
+          <div class="sidebar-toggler">
+          </div>
+        </li>
+
+        <li th:each="accessResource : ${firstAccessResource.childList}"
+            th:if="${accessResource.parentId} eq ${firstAccessResource.id}">
+          <a href="javascript:">
+            <i class="icon-settings"></i>
+            <span class="title" th:text="${accessResource.name}">一级菜单名称</span>
+            <span class="arrow"></span>
+          </a>
+          <ul class="sub-menu">
+            <li th:each="childAccessResource : ${accessResource.childList}"
+                th:if="${childAccessResource.parentId} eq ${accessResource.id}">
+              <a href="user/user_manage.html" th:href="${childAccessResource.url}"
+                 th:text="${childAccessResource.name}">二级菜单名称</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+  <!-- END SIDEBAR -->
+
+  <!-- BEGIN CONTENT AREA-->
+  <div class="page-content-wrapper">
+    <div class="page-content">
+      <iframe frameborder="0"
+              name="iframe"
+              src="welcome.html"
+              style="height:100%;width:100%;"
+              th:src="@{{serviceName}/welcome(serviceName=${application.serviceName})}"></iframe>
+    </div>
+  </div>
+  <!-- END CONTENT AREA-->
+
+</div>
+<!-- END CONTAINER -->
+
+<script src="../static/js/jquery.min.js"
+        th:src="@{{serviceName}/js/jquery.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"
+        th:src="@{{serviceName}/bootstrap/js/bootstrap.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../static/js/metronic.js"
+        th:src="@{{serviceName}/js/metronic.js(serviceName=${application.serviceName})}"></script>
+<script src="../static/js/layout.js"
+        th:src="@{{serviceName}/js/layout.js(serviceName=${application.serviceName})}"></script>
+
+<script type="text/javascript">
+  if (window.top != window.self) {
+    top.location = this.location;
+  }
+
+  jQuery(document).ready(function () {
+    Metronic.init(); // init metronic core componets
+    Layout.init(); // init layout
+  });
+
+  var height = $(document).height();
+  $('iframe').height(height - 86);
+
+</script>
+</body>
+</html>
+
+

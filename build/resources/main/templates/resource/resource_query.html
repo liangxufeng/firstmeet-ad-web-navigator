@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>资源菜单管理</title>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport">
+  <link href="../../static/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+        th:href="@{{serviceName}/bootstrap/css/bootstrap.min.css(serviceName=${application.serviceName})}">
+  <link href="../../static/css/bootstrap-table.min.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/bootstrap-table.min.css(serviceName=${application.serviceName})}">
+  <link href="../../static/css/style.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/style.css(serviceName=${application.serviceName})}">
+  <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css"
+        rel="stylesheet">
+  <link href="../../static/css/zTreeStyle/zTreeStyle.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/zTreeStyle/zTreeStyle.css(serviceName=${application.serviceName})}">
+  <link href="../../static/css/zTreeStyle/zTreeCustomizedStyle.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/zTreeStyle/zTreeCustomizedStyle.css(serviceName=${application.serviceName})}">
+  <link href="../../static/css/demo.css" rel="stylesheet"
+        th:href="@{{serviceName}/css/demo.css(serviceName=${application.serviceName})}"
+        type="text/css">
+
+</head>
+
+<body>
+
+<div class="alert alert-success">资源菜单管理</div>
+
+<div class="form-inline" role="form">
+  <button
+      class="btn btn-success"
+      id="addRoot-btn"
+      th:if="${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_RESOURCE_ADD)}">
+    添加一级节点
+  </button>
+  <button class="btn btn-success"
+          id="copy-btn"
+          th:if="${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_RESOURCE_COPY)}">
+    复制系统节点
+  </button>
+  <button class="btn btn-success"
+          id="paste-btn"
+          th:if="${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_RESOURCE_COPY)}">
+    粘贴
+  </button>
+</div>
+
+<div class="panel-body">
+  <a class="display-hide" href="/resource"
+     id="getResourceUrl"
+     th:href="@{{serviceName}/resource(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/save_rootResource"
+     id="saveRootResourceUrl"
+     th:href="@{{serviceName}/save_rootResource(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/save_resource"
+     id="saveResourceUrl"
+     th:href="@{{serviceName}/save_resource(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/delete_resource"
+     id="deleteResourceUrl"
+     th:href="@{{serviceName}/delete_resource(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/edit_resource"
+     id="editResourceUrl"
+     th:href="@{{serviceName}/edit_resource(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/copy_resource"
+     id="copyResourceUrl"
+     th:href="@{{serviceName}/copy_resource(serviceName=${application.serviceName})}"></a>
+  <a class="display-hide"
+     href="/paste_resource"
+     id="pasteResourceUrl"
+     th:href="@{{serviceName}/paste_resource(serviceName=${application.serviceName})}"></a>
+
+  <div class="content_wrap">
+    <div class="zTreeDemoBackground left">
+      <ul class="ztree" id="treeDemo" style="height: 674px"></ul>
+    </div>
+  </div>
+
+  <div class="admin-mask" style="display: none;">
+    <!-- 添加 -->
+    <div class="web-box" style="display: none;">
+      <span class="glyphicon glyphicon-remove websetContClose"></span>
+      <h4 id="admin-title">添加资源</h4>
+      <hr/>
+      <form id="resourceForm">
+
+        <input id="longId" name="longId" type="hidden">
+        <input id="resourceParentId" name="resourceParentId" type="hidden" value="">
+
+        <div class="form-group">
+          <label for="resourceId">资源ID</label>
+          <input class="form-control" id="resourceId" name="resourceId" type="text">
+        </div>
+
+
+        <div class="form-group">
+          <label for="resourceName">资源名称</label>
+          <input class="form-control" id="resourceName" name="resourceName" type="text">
+        </div>
+
+        <div class="form-group">
+          <label for="resourceType">资源类型</label>
+          <select class="form-control" id="resourceType">
+            <option th:each="typeInfo: ${typeList}" th:selected="${typeName eq typeInfo.name}"
+                    th:text="${typeInfo.name}"
+                    th:value="${typeInfo.type}">Client001
+            </option>
+          </select>
+        </div>
+
+        <div class=" form-group">
+          <label for="resourceUrl">访问路径</label>
+          <input class="form-control" id="resourceUrl" name="resourceUrl" type="text">
+        </div>
+
+        <div class=" form-group">
+          <label for="resourceOrderNum">排序号</label>
+          <input class="form-control" id="resourceOrderNum" name="resourceOrderNum" type="text">
+        </div>
+
+
+        <hr/>
+        <div class=" form-group btn-bottom-bar">
+          <button class="btn btn-primary" id="btn-sure-add" name="submit">确定</button>
+          <button class="btn btn-primary" id="btn-sure-close" type="button">取消</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="myModal" style="width: 23%; top: 90px; left: 550px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="font-size: 1.4rem">设置新系统ID</h3>
+        <span class="close" id="closeBtn" style="margin-top: -25px">×</span>
+      </div>
+      <div class="modal-body">
+        <form id="copyResourceForm">
+          <input id="copyId" name="copyId" type="hidden" value="">
+          <input id="targetId" name="targetId" type="hidden" value="">
+          <div class=" form-group">
+            <label for="changeResourceId">系统ID</label>
+            <input class="form-control" id="changeResourceId" name="changeResourceId" type="text">
+          </div>
+          <div class=" form-group">
+            <label for="changeResourceName">系统名称</label>
+            <input class="form-control" id="changeResourceName" name="changeResourceName"
+                   type="text">
+          </div>
+          <div class="form-group">
+            <label for="changeResourceUrl">系统URL</label>
+            <input class="form-control" id="changeResourceUrl" name="changeResourceUrl" type="text">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer" style="padding: 5px">
+        <div class=" form-group btn-bottom-bar">
+          <button class="btn btn-primary" id="btn-sure-copy" name="submit">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<script src="../../static/js/jquery.min.js"
+        th:src="@{{serviceName}/js/jquery.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/bootstrap/js/bootstrap.min.js"
+        th:src="@{{serviceName}/bootstrap/js/bootstrap.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/bootstrap-table.min.js"
+        th:src="@{{serviceName}/js/bootstrap-table.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/bootstrap-table-zh-CN.min.js"
+        th:src="@{{serviceName}/js/bootstrap-table-zh-CN.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/common.js"
+        th:src="@{{serviceName}/js/common.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/resource/resource_query.js"
+        th:src="@{{serviceName}/js/resource/resource_query.js(serviceName=${application.serviceName})}"></script>
+<!--ztree插件-->
+<script src="../../static/js/jquery.ztree.all.min.js"
+        th:src="@{{serviceName}/js/jquery.ztree.all.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/jquery.ztree.core.min.js"
+        th:src="@{{serviceName}/js/jquery.ztree.core.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/jquery.ztree.excheck.min.js"
+        th:src="@{{serviceName}/js/jquery.ztree.excheck.min.js(serviceName=${application.serviceName})}"></script>
+<script src="../../static/js/jquery.ztree.exedit.js"
+        th:src="@{{serviceName}/js/jquery.ztree.exedit.js(serviceName=${application.serviceName})}"></script>
+<!---->
+<script
+    src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+
+<script th:inline="javascript">
+  var isEditResource = [[${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_RESOURCE_EDIT)}]];
+  var isAddResource = [[${@acl.access(#request,T(com.chujian.wapp.navigator.sso.model.ACL).SYS_SYS,T(com.chujian.wapp.navigator.sso.model.ACL).RS_RESOURCE_ADD)}]];
+</script>
+</body>
+</html>
